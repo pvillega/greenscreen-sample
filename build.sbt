@@ -49,13 +49,13 @@ lazy val library =
     object Version {
       val alpn       = "8.1.11.v20170118"
       val cats       = "0.9.0"
-      val circe      = "0.7.0"
+      val circe      = "0.7.1"
       val doobie     = "0.4.1"
       val dwMetrics  = "3.2.2"
       val flywayDb   = "4.1.2"
-      val http4s     = "0.15.7"
-      val logback    = "1.2.2"
-      val pureConfig = "0.6.0"
+      val http4s     = "0.15.8"
+      val logback    = "1.2.3"
+      val pureConfig = "0.7.0"
       val refined    = "0.8.0"
       val scalaCheck = "1.13.5"
       val scalaTest  = "3.0.1"
@@ -77,7 +77,7 @@ lazy val library =
     // Logging library - https://logback.qos.ch/
     val logback: ModuleID = "ch.qos.logback" % "logback-classic" % Version.logback
     // A boilerplate-free Scala library for loading configuration files - https://github.com/melrief/pureconfig
-    val pureConfig: ModuleID = "com.github.melrief" %% "pureconfig" % Version.pureConfig
+    val pureConfig: ModuleID = "com.github.pureconfig" %% "pureconfig" % Version.pureConfig
     // Library for type-level predicates which constrain the set of values described by the refined type - https://github.com/fthomas/refined
     def refined(stuff: String): ModuleID = "eu.timepit" %% s"refined$stuff" % Version.refined
     // property based testing - https://www.scalacheck.org/documentation.html
