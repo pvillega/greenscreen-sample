@@ -1,0 +1,17 @@
+@(wsUrl: String)
+
+<html>
+<body>
+<h1>Welcome to http4s.</h1>
+
+<p>WebSocket connection test (see console)</p>
+
+<script>
+    console.log("Opening WS stream");
+    var exampleSocket = new WebSocket("@wsUrl");
+    exampleSocket.onmessage = function (event) {
+        console.log(event.data);
+    }
+</script>
+</body>
+</html>

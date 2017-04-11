@@ -2,15 +2,41 @@
 // Projects
 // *****************************************************************************
 
+val wartRemoverExclusions = List(Wart.NonUnitStatements)
+
 lazy val greenscreen =
   project
     .in(file("."))
-    .enablePlugins(AutomateHeaderPlugin, GitVersioning)
+    .enablePlugins(AutomateHeaderPlugin, GitVersioning, SbtTwirl)
     .settings(settings)
     .settings(
+      wartremoverErrors ++= Warts.unsafe.filterNot(wartRemoverExclusions.contains),
       libraryDependencies ++= Seq(
-        library.scalaCheck % Test,
-        library.scalaTest  % Test
+        library.alpn,
+        library.cats,
+        library.circe("-core"),
+        library.circe("-generic"),
+        library.circe("-literal"),
+        library.circe("-parser"),
+        library.circe("-refined"),
+        library.doobie("-core-cats"),
+        library.doobie("-postgres-cats"),
+        library.doobie("-h2-cats"),
+        library.dwMetrics("-core"),
+        library.dwMetrics("-json"),
+        library.flywayDb,
+        library.http4s("-blaze-server"),
+        library.http4s("-circe"),
+        library.http4s("-dsl"),
+        library.http4s("-server-metrics"),
+        library.http4s("-twirl"),
+        library.logback,
+        library.pureConfig,
+        library.refined(""),
+        library.refined("-pureconfig"),
+        library.doobie("-scalatest-cats") % Test,
+        library.scalaCheck                % Test,
+        library.scalaTest                 % Test
       )
     )
 
@@ -21,11 +47,43 @@ lazy val greenscreen =
 lazy val library =
   new {
     object Version {
+      val alpn       = "8.1.11.v20170118"
+      val cats       = "0.9.0"
+      val circe      = "0.7.0"
+      val doobie     = "0.4.1"
+      val dwMetrics  = "3.2.2"
+      val flywayDb   = "4.1.2"
+      val http4s     = "0.15.7"
+      val logback    = "1.2.2"
+      val pureConfig = "0.6.0"
+      val refined    = "0.8.0"
       val scalaCheck = "1.13.5"
       val scalaTest  = "3.0.1"
     }
+    // Enables Http/2 in Java 8 - http://eclipse.org/jetty/documentation/current/alpn-chapter.html
+    val alpn: ModuleID = "org.mortbay.jetty.alpn" % "alpn-boot" % Version.alpn
+    // Provides abstractions for functional programming - http://typelevel.org/cats/
+    val cats: ModuleID = "org.typelevel" %% "cats" % Version.cats
+    // JSON library for scala - https://circe.github.io/circe/
+    def circe(stuff: String): ModuleID = "io.circe" %% s"circe$stuff" % Version.circe
+    // JDBC layer for scala - https://github.com/tpolecat/doobie
+    def doobie(stuff: String): ModuleID = "org.tpolecat" %% s"doobie$stuff" % Version.doobie
+    // Adds Dropwizard metrics to the application - https://github.com/dropwizard/metrics
+    def dwMetrics(stuff: String): ModuleID = "io.dropwizard.metrics" % s"metrics$stuff" % Version.dwMetrics
+    // Database migrations tool - https://flywaydb.org/getstarted/why
+    val flywayDb: ModuleID = "org.flywaydb" % "flyway-core" % Version.flywayDb
+    // web server library - http://http4s.org/
+    def http4s(stuff: String): ModuleID = "org.http4s" %% s"http4s$stuff" % Version.http4s
+    // Logging library - https://logback.qos.ch/
+    val logback: ModuleID = "ch.qos.logback" % "logback-classic" % Version.logback
+    // A boilerplate-free Scala library for loading configuration files - https://github.com/melrief/pureconfig
+    val pureConfig: ModuleID = "com.github.melrief" %% "pureconfig" % Version.pureConfig
+    // Library for type-level predicates which constrain the set of values described by the refined type - https://github.com/fthomas/refined
+    def refined(stuff: String): ModuleID = "eu.timepit" %% s"refined$stuff" % Version.refined
+    // property based testing - https://www.scalacheck.org/documentation.html
     val scalaCheck: ModuleID = "org.scalacheck" %% "scalacheck" % Version.scalaCheck
-    val scalaTest: ModuleID = "org.scalatest"  %% "scalatest"  % Version.scalaTest
+    // testing library - http://www.scalatest.org/user_guide
+    val scalaTest: ModuleID = "org.scalatest" %% "scalatest" % Version.scalaTest
   }
 
 // *****************************************************************************
@@ -49,14 +107,38 @@ lazy val commonSettings =
       "-deprecation",
       "-language:_",
       "-target:jvm-1.8",
-      "-encoding", "UTF-8"
+      "-encoding",
+      "UTF-8",
+      "-opt:l:method",
+      "-Xfatal-warnings",
+      "-Xlint:_",
+      "-Ywarn-adapted-args",
+      "-Ywarn-dead-code",
+      "-Ywarn-inaccessible",
+      "-Ywarn-infer-any",
+      "-Ywarn-nullary-override",
+      "-Ywarn-nullary-unit",
+      "-Ywarn-numeric-widen",
+      "-Ywarn-unused"
+      //"-Ywarn-unused-import"  -- can't be used with Twirl templates if we fail-on-error, left in case we replace Twirl later on
     ),
+    // Adds ALPN agent to the boot classpath for HTTP/2 support
+    javaOptions.in(run) ++= ((managedClasspath in Runtime) map { attList =>
+      for {
+        file <- attList.map(_.data)
+        path = file.getAbsolutePath if path.contains("jetty.alpn")
+      } yield {
+        s"-Xbootclasspath/p:$path"
+      }
+    }).value,
     unmanagedSourceDirectories.in(Compile) := Seq(scalaSource.in(Compile).value),
     unmanagedSourceDirectories.in(Test) := Seq(scalaSource.in(Test).value),
     shellPrompt in ThisBuild := { state =>
       val project = Project.extract(state).currentRef.project
       s"[$project]> "
-    }
+    },
+    coverageMinimum := 80,
+    coverageFailOnMinimum := true
 )
 
 lazy val gitSettings =

@@ -33,3 +33,7 @@ snapshots
 
 # Log files
 *.log
+*.current
+
+# dev database
+devDB.h2db*
