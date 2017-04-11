@@ -24,8 +24,8 @@ lazy val library =
       val scalaCheck = "1.13.5"
       val scalaTest  = "3.0.1"
     }
-    val scalaCheck = "org.scalacheck" %% "scalacheck" % Version.scalaCheck
-    val scalaTest  = "org.scalatest"  %% "scalatest"  % Version.scalaTest
+    val scalaCheck: ModuleID = "org.scalacheck" %% "scalacheck" % Version.scalaCheck
+    val scalaTest: ModuleID = "org.scalatest"  %% "scalatest"  % Version.scalaTest
   }
 
 // *****************************************************************************
@@ -64,7 +64,6 @@ lazy val gitSettings =
     git.useGitDescribe := true
   )
 
-import de.heikoseeberger.sbtheader.HeaderPattern
 import de.heikoseeberger.sbtheader.license._
 lazy val headerSettings =
   Seq(

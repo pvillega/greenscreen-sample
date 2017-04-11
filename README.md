@@ -1,6 +1,11 @@
-# greenscreen #
+# Green Screen 
 
-Welcome to greenscreen!
+Welcome to Green Screen! At its core, Green Screen is a lab project, that is, a place where you can test new 
+libraries and techniques. 
+
+The excuse for the existence of this project is to bring back to life the user experience of green screens within 
+the context of modern web frameworks.
+
 
 ## Contribution policy ##
 
