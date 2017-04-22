@@ -16,18 +16,17 @@
 
 package com.aracon.greenscreen.db.migration
 
-import javax.sql.DataSource
-
+import com.aracon.greenscreen.config.DbConfig
 import org.flywaydb.core.Flyway
-
+import eu.timepit.refined.auto._
 import scala.util.Try
 
 object FlywayMigration {
 
   // returns number of migrations applied
-  def startMigration(dataSource: DataSource): Try[Int] = Try {
+  def startMigration(config: DbConfig): Try[Int] = Try {
     val flyway = new Flyway()
-    flyway.setDataSource(dataSource)
+    flyway.setDataSource(config.url, config.user, config.password)
     flyway.migrate()
   }
 }

@@ -20,14 +20,12 @@ import java.nio.file.Path
 
 import scala.util.Properties._
 import java.util.concurrent.{ ExecutorService, Executors }
-import javax.sql.DataSource
 
 import com.codahale.metrics.MetricRegistry
 import com.aracon.greenscreen._
-import doobie.imports.{ DataSourceTransactor, IOLite }
+import doobie.imports.{ IOLite, Transactor }
+import doobie.util.transactor.DriverManagerTransactor
 import eu.timepit.refined.auto._
-import org.h2.jdbcx.JdbcDataSource
-import org.postgresql.jdbc3.Jdbc3SimpleDataSource
 
 final case class DbConfig(driver: NonEmptyString, url: NonEmptyString, user: NonEmptyString, password: String)
 final case class TlsKeyStore(enabled: Boolean, path: Path, password: NonEmptyString, managerPassword: NonEmptyString)
@@ -57,22 +55,7 @@ final case class Config(settings: Settings) {
   // Common metrics registry of the application. There should be only one per server
   val metricRegistry = new MetricRegistry()
 
-  // unfortunately DataSource object don't have set methods. And setUrl differs in both implementations... ouch
-  val datasource: DataSource = settings.db.driver.value match {
-    case "h2" =>
-      val ds = new JdbcDataSource()
-      ds.setURL(settings.db.url)
-      ds.setUser(settings.db.user)
-      ds.setPassword(settings.db.password)
-      ds
-    case _ =>
-      val ds = new Jdbc3SimpleDataSource()
-      ds.setUrl(settings.db.url)
-      ds.setUser(settings.db.user)
-      ds.setPassword(settings.db.password)
-      ds
-  }
-
   // Currently uses IOLite monad for IO in Doobie, may be replaced later on for performance
-  implicit val doobieTransactor = DataSourceTransactor[IOLite](datasource)
+  implicit val doobieTransactor: Transactor[IOLite] =
+    DriverManagerTransactor[IOLite](settings.db.driver, settings.db.url, settings.db.user, settings.db.password)
 }

@@ -21,7 +21,6 @@ lazy val greenscreen =
         library.circe("-refined"),
         library.doobie("-core-cats"),
         library.doobie("-postgres-cats"),
-        library.doobie("-h2-cats"),
         library.dwMetrics("-core"),
         library.dwMetrics("-json"),
         library.flywayDb,

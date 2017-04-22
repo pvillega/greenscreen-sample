@@ -31,4 +31,5 @@ export JAVA_OPTS="$JAVA_OPTS\
 
 CONFIG_OPT="-v -Dconfig.resource=application.dev.conf"
 
+echo "Running server locally. This requires a local postgres db running, check script 'setupPostgresSocker.sh' in this same folder to run one using docker."
 sbt ${CONFIG_OPT} run

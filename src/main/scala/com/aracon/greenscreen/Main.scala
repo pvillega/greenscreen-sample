@@ -89,7 +89,7 @@ object Main extends ServerApp with Loggable {
     logger.info("Starting database migrations with Flyway")
 
     FlywayMigration
-      .startMigration(config.datasource)
+      .startMigration(config.db)
       .toEither
       .map(n => logger.info(s"Successfully applied $n migrations to the database with url ${config.db.url}"))
       .leftMap { ex =>

@@ -9,6 +9,13 @@ the context of modern web frameworks.
 
 ## Starting the app
 
+The app relies on [Postgres](https://www.postgresql.org/) as the database. You can set up one local instance or, recommended,
+use [Docker](https://www.docker.com/) and run:
+
+```bash
+$ bin/setupPostgresDocker.sh
+```
+
 You can use the script `bin/startDev.sh` to launch the application.
 
 Alternatively, within `sbt` console execute:
@@ -62,15 +69,12 @@ areas of the application.
 
 ## Database
 
-### H2 and Postgres
+### Postgres
 
-The project is configured to use 2 databases:
+The project is configured to use [Postgres](https://www.postgresql.org/).
 
-* H2 in development, using a physical file (not in-memory), which can be found at `./devDB.h2db.mv.db` 
-* PostgreSQL in production
-
-We use H2 in development to avoid the need of setting a local Postgres. Of course, that can be done if desired.
-We use a physical file instead of in-memory so we don't have to apply db migrations on each restart, as they can be slow.
+You can set up one local instance or if you use [Docker](https://www.docker.com/) the script `bin/setupPostgresDocker.sh`
+can set up one container running postgres for you.
 
 ### Doobie
 
