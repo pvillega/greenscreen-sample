@@ -13,7 +13,7 @@ The app relies on [Postgres](https://www.postgresql.org/) as the database. You c
 use [Docker](https://www.docker.com/) and run:
 
 ```bash
-$ bin/setupPostgresDocker.sh
+$ bin/psql/setupPostgresDocker.sh
 ```
 
 You can use the script `bin/startDev.sh` to launch the application.
@@ -50,6 +50,11 @@ properly tested.
 We don't enable coverage by default in our build, but require the above script to run it, as to avoid instrumentation impacting
 the packaged binaries.
 
+### Native packager
+
+[Sbt Native Packager](https://github.com/sbt/sbt-native-packager) provides tooling to create deployables for many release environments.
+We currently use it to generate a simple zip package, but it includes support for Docker, Heroku, and many other platforms.
+
 ## Relevant libraries
 
 Besides [Cats](http://typelevel.org/cats/) and similar [Typelevel libraries](http://typelevel.org/projects/), we use the following
@@ -73,8 +78,10 @@ areas of the application.
 
 The project is configured to use [Postgres](https://www.postgresql.org/).
 
-You can set up one local instance or if you use [Docker](https://www.docker.com/) the script `bin/setupPostgresDocker.sh`
+You can set up one local instance or if you use [Docker](https://www.docker.com/) the script `bin/psql/setupPostgresDocker.sh`
 can set up one container running postgres for you.
+
+Folder `bin/psql/` includes some utility scripts to help removing unused docker volumes
 
 ### Doobie
 
@@ -114,7 +121,17 @@ ALPN dependency is managed in `build.sbt` and there is a piece of code for `java
 
 ## Deployment
 
-TODO - GCP
+**WARNING: UNSAFE!** The information below is provided to showcase how we can deploy the application to a given platform.
+Be aware what it does is probably unsafe for a proper production application, in many cases. Double check the documentation
+of your platform of choice to ensure you follow best practices to secure your application.
+
+###  Deploying To Google Cloud Platform
+
+Please see [GCP_Readme](deployment/gcp/GCP_Readme.md) on `deployment` folder for more information
+
+###  Deploying To Google Container Platform
+
+TBD
 
 ## Contribution policy ##
 

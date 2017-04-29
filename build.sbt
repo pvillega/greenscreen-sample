@@ -7,7 +7,7 @@ val wartRemoverExclusions = List(Wart.NonUnitStatements)
 lazy val greenscreen =
   project
     .in(file("."))
-    .enablePlugins(AutomateHeaderPlugin, GitVersioning, SbtTwirl)
+    .enablePlugins(AutomateHeaderPlugin, GitVersioning, SbtTwirl, JavaServerAppPackaging)
     .settings(settings)
     .settings(
       wartremoverErrors ++= Warts.unsafe.filterNot(wartRemoverExclusions.contains),
@@ -23,6 +23,7 @@ lazy val greenscreen =
         library.doobie("-postgres-cats"),
         library.dwMetrics("-core"),
         library.dwMetrics("-json"),
+        library.fluentLogger,
         library.flywayDb,
         library.http4s("-blaze-server"),
         library.http4s("-circe"),
@@ -30,6 +31,7 @@ lazy val greenscreen =
         library.http4s("-server-metrics"),
         library.http4s("-twirl"),
         library.logback,
+        library.nscala,
         library.pureConfig,
         library.refined(""),
         library.refined("-pureconfig"),
@@ -51,9 +53,11 @@ lazy val library =
       val circe      = "0.7.1"
       val doobie     = "0.4.1"
       val dwMetrics  = "3.2.2"
+      val fluentLogger = "0.7.0"
       val flywayDb   = "4.1.2"
       val http4s     = "0.15.8"
       val logback    = "1.2.3"
+      val nscala = "2.16.0"
       val pureConfig = "0.7.0"
       val refined    = "0.8.0"
       val scalaCheck = "1.13.5"
@@ -69,12 +73,16 @@ lazy val library =
     def doobie(stuff: String): ModuleID = "org.tpolecat" %% s"doobie$stuff" % Version.doobie
     // Adds Dropwizard metrics to the application - https://github.com/dropwizard/metrics
     def dwMetrics(stuff: String): ModuleID = "io.dropwizard.metrics" % s"metrics$stuff" % Version.dwMetrics
+    // Library for Fluentd logging, required for GCP - https://github.com/fluent/fluentd
+    val fluentLogger: ModuleID = "org.fluentd" %% "fluent-logger-scala" % Version.fluentLogger
     // Database migrations tool - https://flywaydb.org/getstarted/why
     val flywayDb: ModuleID = "org.flywaydb" % "flyway-core" % Version.flywayDb
     // web server library - http://http4s.org/
     def http4s(stuff: String): ModuleID = "org.http4s" %% s"http4s$stuff" % Version.http4s
     // Logging library - https://logback.qos.ch/
     val logback: ModuleID = "ch.qos.logback" % "logback-classic" % Version.logback
+    // Joda Time for Scala - https://github.com/nscala-time/nscala-time
+    val nscala: ModuleID = "com.github.nscala-time" %% "nscala-time" % Version.nscala
     // A boilerplate-free Scala library for loading configuration files - https://github.com/melrief/pureconfig
     val pureConfig: ModuleID = "com.github.pureconfig" %% "pureconfig" % Version.pureConfig
     // Library for type-level predicates which constrain the set of values described by the refined type - https://github.com/fthomas/refined

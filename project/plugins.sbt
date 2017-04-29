@@ -29,3 +29,6 @@ addSbtPlugin("org.wartremover" % "sbt-wartremover" % "2.0.3")
 
 // sbt-scoverage is a plugin for SBT that integrates the scoverage code coverage library - See https://github.com/scoverage/sbt-scoverage
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.0")
+
+// sbt-native-packager lets you build application packages in native formats - See https://github.com/sbt/sbt-native-packager
+addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.2.0-M8")

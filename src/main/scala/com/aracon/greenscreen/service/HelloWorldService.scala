@@ -16,6 +16,7 @@
 
 package com.aracon.greenscreen.service
 
+import com.aracon.greenscreen.Loggable
 import com.aracon.greenscreen.config.Config
 import com.aracon.greenscreen.db.DBQueries
 import io.circe.syntax._
@@ -27,7 +28,7 @@ import org.http4s.circe._
 import org.http4s.dsl._
 import org.http4s.twirl._
 
-object HelloWorldService {
+object HelloWorldService extends Loggable {
   def service(config: Config): Service[Request, Response] =
     HttpService {
       case GET -> Root =>
@@ -35,6 +36,13 @@ object HelloWorldService {
         Ok(html.index(s"${config.wsProtocol}://${config.interface}:${config.port}${config.appPrefix}/ws"))
 
       case GET -> Root / "test" =>
+        val tests = DBQueries.getAllTests(config.doobieTransactor).unsafePerformIO
+        Ok(tests.asJson)
+
+      case GET -> Root / "testError" =>
+        error("Testing an error message for error reporting on GCE without stacktrace")
+        error("Testing an exception message for error reporting on GCE with stacktrace",
+              new Exception("Fake exception here"))
         val tests = DBQueries.getAllTests(config.doobieTransactor).unsafePerformIO
         Ok(tests.asJson)
     }

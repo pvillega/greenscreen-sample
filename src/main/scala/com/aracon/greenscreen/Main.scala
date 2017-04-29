@@ -36,8 +36,8 @@ object Main extends ServerApp with Loggable {
   override def server(args: List[String]): Task[Server] =
     preStartOperations().fold(
       err => {
-        logger.error(err)
-        logger.error("Errors during pre-Start phase. Program will now exit.")
+        error(err)
+        error("Errors during pre-Start phase. Program will now exit.")
         Task.fail(new RuntimeException(err))
       },
       config => {
@@ -80,18 +80,18 @@ object Main extends ServerApp with Loggable {
     } yield conf
 
   private def loadAppConfiguration(): Either[String, Settings] = {
-    logger.info("Initialising the config object")
+    info("Initialising the config object")
     loadConfig[Settings]
       .leftMap(err => s"Error loading configuration: $err")
   }
 
   private def runDBMigrations(config: Config): Either[String, Unit] = {
-    logger.info("Starting database migrations with Flyway")
+    info("Starting database migrations with Flyway")
 
     FlywayMigration
       .startMigration(config.db)
       .toEither
-      .map(n => logger.info(s"Successfully applied $n migrations to the database with url ${config.db.url}"))
+      .map(n => info(s"Successfully applied $n migrations to the database with url ${config.db.url}"))
       .leftMap { ex =>
         s"Error while applying migrations to the database with url ${config.settings.db.url}: ${ex.getMessage}\n ${ex.getStackTrace
           .mkString("\n")}"
