@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: postgres-master
+  labels:
+      app: postgres
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+        role: master
+        tier: backend
+    spec:
+      containers:
+      - name: postgres-master
+        image: us.gcr.io/PROJECT_ID/postgres962
+        env:
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres
+                key: password
+        resources:
+          requests: # reduced capacity
+            cpu: 100m
+            memory: 100Mi
+        ports:
+          - containerPort: 5432
+            name: postgres-master
+        volumeMounts:
+          - name: postgres-persistent-storage
+            mountPath: /var/lib/postgresql
+      volumes:
+        - name: postgres-persistent-storage
+          gcePersistentDisk:
+            pdName: postgres-disk
+            fsType: ext4

@@ -127,11 +127,11 @@ of your platform of choice to ensure you follow best practices to secure your ap
 
 ###  Deploying To Google Cloud Platform
 
-Please see [GCP_Readme](deployment/gcp/GCP_Readme.md) on `deployment` folder for more information
+Please see [GCP_Readme](deployment/google_compute_engine/GCP_Readme.md) on `deployment` folder for more information
 
 ###  Deploying To Google Container Platform
 
-TBD
+Please see [Kubernetes_Readme](deployment/gcp_kubernetes/GCP_Kubernetes.md) on `deployment` folder for more information
 
 ## Contribution policy ##
 

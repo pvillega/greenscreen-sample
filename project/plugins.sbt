@@ -32,3 +32,6 @@ addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.0")
 
 // sbt-native-packager lets you build application packages in native formats - See https://github.com/sbt/sbt-native-packager
 addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.2.0-M8")
+
+// sbt-docker let's you create docker images for your application. Requires sbt-native-package - See https://github.com/marcuslonnberg/sbt-docker
+addSbtPlugin("se.marcuslonnberg" % "sbt-docker" % "1.4.1")

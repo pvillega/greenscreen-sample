@@ -7,7 +7,7 @@ val wartRemoverExclusions = List(Wart.NonUnitStatements)
 lazy val greenscreen =
   project
     .in(file("."))
-    .enablePlugins(AutomateHeaderPlugin, GitVersioning, SbtTwirl, JavaServerAppPackaging)
+    .enablePlugins(AutomateHeaderPlugin, GitVersioning, SbtTwirl, sbtdocker.DockerPlugin, AshScriptPlugin)
     .settings(settings)
     .settings(
       wartremoverErrors ++= Warts.unsafe.filterNot(wartRemoverExclusions.contains),
@@ -158,3 +158,22 @@ lazy val headerSettings =
   Seq(
     headers := Map("scala" -> Apache2_0("2017", "Pere Villega"))
   )
+
+// *****************************************************************************
+// Docker file
+// *****************************************************************************
+dockerfile in docker := {
+  val appDir: File = stage.value
+  val targetDir = "/app"
+  val serverTlsCert : File = file("./selfsigned.jks")
+
+  new Dockerfile {
+    from("openjdk:8-jdk-alpine")
+    env("JDBC_DATABASE_URL", "jdbc:postgresql://postgres-master:5432/postgres")
+    env("JAVA_OPTS", "-Dconfig.resource=application.dev.conf")
+    copy(appDir, targetDir)
+    copy(serverTlsCert, targetDir)
+    workDir(targetDir)
+    entryPoint(s"bin/${executableScriptName.value}")
+  }
+}

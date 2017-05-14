@@ -80,6 +80,7 @@ object Main extends ServerApp with Loggable {
     } yield conf
 
   private def loadAppConfiguration(): Either[String, Settings] = {
+    info(s"Current working folder: ${System.getProperty("user.dir")}")
     info("Initialising the config object")
     loadConfig[Settings]
       .leftMap(err => s"Error loading configuration: $err")
