@@ -35,3 +35,6 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.2.0-M8")
 
 // sbt-docker let's you create docker images for your application. Requires sbt-native-package - See https://github.com/marcuslonnberg/sbt-docker
 addSbtPlugin("se.marcuslonnberg" % "sbt-docker" % "1.4.1")
+
+// sbt-dependency-check plugin allows projects to monitor dependent libraries for known, published vulnerabilities (e.g. CVEs) - See https://github.com/albuch/sbt-dependency-check
+addSbtPlugin("net.vonbuchholtz" % "sbt-dependency-check" % "0.1.7")

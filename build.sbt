@@ -145,7 +145,8 @@ lazy val commonSettings =
       s"[$project]> "
     },
     coverageMinimum := 80,
-    coverageFailOnMinimum := true
+    coverageFailOnMinimum := true,
+    dependencyCheckFormat := "All"
 )
 
 lazy val gitSettings =

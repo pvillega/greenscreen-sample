@@ -55,6 +55,12 @@ the packaged binaries.
 [Sbt Native Packager](https://github.com/sbt/sbt-native-packager) provides tooling to create deployables for many release environments.
 We currently use it to generate a simple zip package, but it includes support for Docker, Heroku, and many other platforms.
 
+### OWASP Dependency Check
+ 
+[OWASP DependencyCheck library](https://github.com/albuch/sbt-dependency-check) for Scala allows projects to monitor dependent libraries
+for known, published vulnerabilities (e.g. CVEs).
+
+
 ## Relevant libraries
 
 Besides [Cats](http://typelevel.org/cats/) and similar [Typelevel libraries](http://typelevel.org/projects/), we use the following
