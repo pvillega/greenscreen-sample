@@ -55,7 +55,7 @@ object Main extends ServerApp with Loggable {
 
   private def configureAppServices(config: Config): HttpService = {
     val appServices: Service[Request, Response] =
-    HelloWorldService.service(config) orElse WebSocketService.service(config)
+    HelloWorldService.service(config) orElse WebSocketService.service
 
     Router(
       ""         -> Metrics(config.metricRegistry, "services")(appServices),

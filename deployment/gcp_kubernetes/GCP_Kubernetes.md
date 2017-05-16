@@ -153,11 +153,11 @@ $ kubectl get service
 $ kubectl delete deployment <name>
 ```      
 
+--------------
+
+3b)fix uopdated dependencies
 
 
-TBD
-
-3b) Add https://github.com/albuch/sbt-dependency-check for security! force trigger on compile and add to readme note about plugin
 
 4) use ansible for deployment
 4a) Enable CI via drone.io to deploy to kubernetes

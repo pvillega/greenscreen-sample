@@ -30,7 +30,7 @@ import scalaz.stream.{ DefaultScheduler, Exchange, Process, Sink }
 
 object WebSocketService {
   // current version uses scalaz-stream, this will need to be migrated to fs2 at some point
-  def service(config: Config): Service[Request, Response] =
+  def service: Service[Request, Response] =
     HttpService {
       case GET -> Root / "wsTest" =>
         Ok("WebServices endpoint active")

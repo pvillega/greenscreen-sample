@@ -50,18 +50,18 @@ lazy val library =
     object Version {
       val alpn       = "8.1.11.v20170118"
       val cats       = "0.9.0"
-      val circe      = "0.7.1"
+      val circe      = "0.8.0"
       val doobie     = "0.4.1"
       val dwMetrics  = "3.2.2"
       val fluentLogger = "0.7.0"
-      val flywayDb   = "4.1.2"
-      val http4s     = "0.15.8"
+      val flywayDb   = "4.2.0"
+      val http4s     = "0.15.12"
       val logback    = "1.2.3"
-      val nscala = "2.16.0"
+      val nscala     = "2.16.0"
       val pureConfig = "0.7.0"
-      val refined    = "0.8.0"
+      val refined    = "0.8.1"
       val scalaCheck = "1.13.5"
-      val scalaTest  = "3.0.1"
+      val scalaTest  = "3.0.3"
     }
     // Enables Http/2 in Java 8 - http://eclipse.org/jetty/documentation/current/alpn-chapter.html
     val alpn: ModuleID = "org.mortbay.jetty.alpn" % "alpn-boot" % Version.alpn
@@ -104,7 +104,7 @@ lazy val settings =
 
 lazy val commonSettings =
   Seq(
-    scalaVersion := "2.12.1",
+    scalaVersion := "2.12.2",
     organization := "com.aracon",
     licenses += ("Apache 2.0",
                  url("http://www.apache.org/licenses/LICENSE-2.0")),
@@ -118,7 +118,8 @@ lazy val commonSettings =
       "UTF-8",
       "-opt:l:method",
       "-Xfatal-warnings",
-      "-Xlint:_",
+      "-Xlint:-unused,_", // we need to exclude 'unused' as can't be used with Twirl templates if we fail-on-error, fix if we replace Twirl later on
+      "-Ypartial-unification",
       "-Ywarn-adapted-args",
       "-Ywarn-dead-code",
       "-Ywarn-inaccessible",
@@ -126,8 +127,7 @@ lazy val commonSettings =
       "-Ywarn-nullary-override",
       "-Ywarn-nullary-unit",
       "-Ywarn-numeric-widen",
-      "-Ywarn-unused"
-      //"-Ywarn-unused-import"  -- can't be used with Twirl templates if we fail-on-error, left in case we replace Twirl later on
+      "-Ywarn-unused:-imports" // we need to exclude 'unused imports' as can't be used with Twirl templates if we fail-on-error, fix if we replace Twirl later on
     ),
     // Adds ALPN agent to the boot classpath for HTTP/2 support
     javaOptions.in(run) ++= ((managedClasspath in Runtime) map { attList =>

@@ -28,8 +28,7 @@ object AutomateScalafmtPlugin extends AutoPlugin {
                   .get
                   .toSet
               def format(handler: Set[File] => Unit, msg: String) = {
-                def update(handler: Set[File] => Unit, msg: String)(in: ChangeReport[File],
-                                                                    out: ChangeReport[File]) = {
+                def update(handler: Set[File] => Unit, msg: String)(in: ChangeReport[File], out: ChangeReport[File]) = {
                   val label = Reference.display(thisProjectRef.value)
                   val files = in.modified -- in.removed
                   Analysis

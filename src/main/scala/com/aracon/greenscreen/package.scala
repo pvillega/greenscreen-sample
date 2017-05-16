@@ -54,8 +54,7 @@ package object greenscreen {
 
   // Fixed on Doobie 0.4.2? Allows generation of doobie Composite objects from Refined types
   @SuppressWarnings(Array("org.wartremover.warts.Throw"))
-  implicit def refinedComposite[T: Composite, P, F[_, _]](implicit tt: TypeTag[F[T, P]],
-                                                          ct: ClassTag[F[T, P]],
+  implicit def refinedComposite[T: Composite, P, F[_, _]](implicit ct: ClassTag[F[T, P]],
                                                           validate: Validate[T, P],
                                                           refType: RefType[F]): Composite[F[T, P]] =
     Composite[T].imap(refType.refine[P](_) match {
