@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 dir="$( cd "$( dirname "$0" )" && pwd )"
-cd ${dir}/..
+cd ${dir}/../..
 
 # This script creates the necessary docker images and volumes so we can run postgres locally, via docker
 # See https://hub.docker.com/_/postgres/

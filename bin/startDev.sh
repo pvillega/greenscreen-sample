@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e # fail fast
 dir="$( cd "$( dirname "$0" )" && pwd )"
 cd ${dir}/..
 
@@ -31,5 +32,5 @@ export JAVA_OPTS="$JAVA_OPTS\
 
 CONFIG_OPT="-v -Dconfig.resource=application.dev.conf"
 
-echo "Running server locally. This requires a local postgres db running, check script 'psql/setupPostgresSocker.sh' in this same folder to run one using docker."
+echo "Running server locally. This requires a local postgres db running, check script 'psql/startPostgresSocker.sh' in this same folder to run one using docker."
 sbt ${CONFIG_OPT} run

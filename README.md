@@ -13,7 +13,7 @@ The app relies on [Postgres](https://www.postgresql.org/) as the database. You c
 use [Docker](https://www.docker.com/) and run:
 
 ```bash
-$ bin/psql/setupPostgresDocker.sh
+$ bin/psql/startPostgresDocker.sh
 ```
 
 You can use the script `bin/startDev.sh` to launch the application.
@@ -84,7 +84,7 @@ areas of the application.
 
 The project is configured to use [Postgres](https://www.postgresql.org/).
 
-You can set up one local instance or if you use [Docker](https://www.docker.com/) the script `bin/psql/setupPostgresDocker.sh`
+You can set up one local instance or if you use [Docker](https://www.docker.com/) the script `bin/psql/startPostgresDocker.sh`
 can set up one container running postgres for you.
 
 Folder `bin/psql/` includes some utility scripts to help removing unused docker volumes
@@ -138,6 +138,8 @@ Please see [GCP_Readme](deployment/google_compute_engine/GCP_Readme.md) on `depl
 ###  Deploying To Google Container Platform
 
 Please see [Kubernetes_Readme](deployment/gcp_kubernetes/GCP_Kubernetes.md) on `deployment` folder for more information
+
+Includes instructions on how to setup [Concourse](https://concourse.ci/index.html) for CI tasks
 
 ## Contribution policy ##
 
