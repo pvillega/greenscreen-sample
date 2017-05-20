@@ -37,3 +37,10 @@ snapshots
 
 # dev database
 devDB.h2db*
+
+# ignore Vagrant machinery
+.vagrant
+Vagrantfile
+
+# ignore credentials file for Concourse
+credentials.yml

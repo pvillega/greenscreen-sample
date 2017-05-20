@@ -1,0 +1,26 @@
+---
+resources:
+- name: greenscreen-source
+  type: git
+  source:
+    uri: {{bitbucket-project-uri}}
+    branch: master
+    private_key: {{bitbucket-private-key}}
+
+#- name: version
+#  type: semver
+#  source:
+#    driver: git
+#    initial_version: 0.0.1
+#    uri: {{bitbucket-project-uri}}
+#    branch: version
+#    file: version
+#    private_key: {{bitbucket-private-key}}
+
+jobs:
+- name: unit-tests
+  plan:
+  - get: greenscreen-source
+    trigger: true
+  - task: unit
+    file: greenscreen-source/deployment/concourse/tasks/unit-tests.yml
