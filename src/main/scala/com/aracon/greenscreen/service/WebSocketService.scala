@@ -16,7 +16,6 @@
 
 package com.aracon.greenscreen.service
 
-import com.aracon.greenscreen.config.Config
 import org.http4s._
 import org.http4s.dsl._
 import org.http4s.server.websocket._

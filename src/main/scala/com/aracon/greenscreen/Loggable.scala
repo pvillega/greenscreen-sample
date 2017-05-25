@@ -33,22 +33,22 @@ trait Loggable {
 
   protected val LOG: FluentLogger = FluentLoggerFactory.getLogger(this.getClass.getName)
 
-  def info(msg: String) =
+  def info(msg: String): Unit =
     logger.info(msg)
 
-  def error(msg: String): Unit = {
+  def error(msg: String): Boolean = {
     logger.error(msg)
     logData("errors", msg)
   }
 
-  def error(msg: String, ex: Throwable): Unit = {
+  def error(msg: String, ex: Throwable): Boolean = {
     val exceptionWriter = new StringWriter()
     ex.printStackTrace(new PrintWriter(exceptionWriter))
     error(s"$msg \n ${exceptionWriter.toString}")
   }
 
   //TODO: pass service context info from config, requires version to be part of our config data (Extracted from environment?)
-  private def logData(label: String, msg: String): Unit =
+  private def logData(label: String, msg: String): Boolean =
     LOG.log(
       label,
       Map(
