@@ -53,7 +53,7 @@ This section covers several ways to deploy the application. They are incremental
 
 ### Running the application locally via the docker image 
 
-We already have a script that runs a default [PostgreSQL](https://www.postgresql.org/) image, located at `bin/psql/setupPostgresDocker.sh`.
+We already have a script that runs a default [PostgreSQL](https://www.postgresql.org/) image, located at `bin/psql/startPostgresDocker.sh`.
 The script mounts a local volume (so data is not lost if container is shut down) and runs the database in port 5432 with user 'postgres' and 
 password 'passw0rd'.
 
@@ -153,59 +153,40 @@ $ kubectl get service
 $ kubectl delete deployment <name>
 ```      
 
---------------
+### CI/CD with Concourse
 
-3b)fix uopdated dependencies
+NOTE: for the purposes of this experiment I didn't finish the full pipeline as I hit some issues with Concourse. It is
+a great tool but it needs some polishing in some areas. I will revisit in a while and update instructions.
 
+Obviously we don't want to run the deployment scripts manually each time, what we want to have is a CI/CD platform
+that detects our commits and deploys at least to a staging area.
 
+This section explains how to start setting up such environment using [Concourse](https://concourse.ci/).
 
-4) use ansible for deployment
-4a) Enable CI via drone.io to deploy to kubernetes
-  -- how to create different docker instances for different environments in CI? create for uat with one config, prod another
-  -- needs sbt to read some environment variable to set the docker file params appropiately (env values)
-  -- or kubernetes config prepares the env variables docker will use and we do nothing in sbt
-      http://terrenceryan.com/blog/index.php/kubernetes-secrets-directly-to-environment-variables/
+The best way to start with Concourse is to use [Vagrant](https://www.vagrantup.com/) to run a Concourse server. 
+Follow [these steps](http://sourabhbajaj.com/mac-setup/Vagrant/README.html) to install Vagrant in your MacOS machine. 
+ 
+Councourse's [instructions](https://concourse.ci/vagrant.html) explain how to launch the vagrant box. There are a few 
+scripts at `bin/ci/*.sh` that can help you start, stop, and upgrade your Vagrant-based concourse local server.
 
---> do commit to tracer bullet for deployment to kubernetes, we need to configure target server to be something else 
-than GPC
+The best way to get familiar with Concourse is to follow [some](https://concourse.ci/hello-world.html) 
+[tutorials](https://github.com/starkandwayne/concourse-tutorial). Once you understand how to set up pipelines,
+you can use the pipeline descriptor at `deployment/concourse/pipeline/example.yml`. This will create a pipeline
+that checks a repository for changes and runs unit tests against the codebase.
 
-4b) user letsencrypt and custom domain for url!
-5) replace postgresql db from container to GCP managed postgres and enable backups
-6) other security features for kubernetes?
-7) Other greenscreen stuff
-8) websockets? https://medium.com/google-cloud/deploying-websockets-cluster-to-gcp-with-lets-encrypt-certificates-5ebb7fc1e245
+The folder `deployment/concourse/tasks` contains the implementation of the task that runs the unit tests.
+You will also need your own `deployment/concourse/credentials.yml` file with the ssh keys for the repository.
 
-set domain & get free ssl cert (let's encrypt)
-  ???
+As mentioned, there are a few known issues which meant building the full pipeline for a hobby project was too time
+ consuming. These issues are:
+ 
+Lack of Sbt caching (or caching in general). Concourse runs each task in a new docker container. This is fine, except
+that Sbt wants to download the internet before compiling, which makes things slow. And that happens every time.
 
-Logging and monitoring?
-  ???
+There is an [issue](https://github.com/concourse/concourse/issues/230) raised on this, and it will be fixed in the future. 
+Some people devised a [workaround](https://github.com/ymedlop/npm-cache-resource/) for Npm which could potentially be 
+adapted in the meantime. But too much effort for this side project :)
 
-Docker image advise
-  https://rock-it.pl/how-to-write-excellent-dockerfiles/
-
-Docker + ansible
-https://docs.docker.com/engine/admin/ansible/#installation
-
-
-Ansible + kubernetes??
- ???
-
-Env variables in Kubernetes?
- ???
-
-Kubernetes and postgresql
- http://blog.kubernetes.io/2017/02/postgresql-clusters-kubernetes-statefulsets.html
- https://github.com/CrunchyData/crunchy-containers
-
-
-Preemptible machines for nodes?
- https://cloud.google.com/preemptible-vms/
-
-
-Q: How to secure, etc Kubernetes? 
-  https://kubernetes.io/docs/concepts/configuration/secret/
-
-Q: how to do red/green deployments in kubernetes to avoid issues
-
-Q: set up CI with drone.io
+Another issue is the [baggage errors](https://github.com/concourse/concourse/issues/813). These are compounded by using a
+Vagrant image to run the service, but they mean unexpected downtime and need to restart the box. Probably not a real issue
+if you are using a proper deployment of Concourse in its own server, but, again, that won't happen for a side project.
