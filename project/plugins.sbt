@@ -38,3 +38,7 @@ addSbtPlugin("se.marcuslonnberg" % "sbt-docker" % "1.4.1")
 
 // sbt-dependency-check plugin allows projects to monitor dependent libraries for known, published vulnerabilities (e.g. CVEs) - See https://github.com/albuch/sbt-dependency-check
 addSbtPlugin("net.vonbuchholtz" % "sbt-dependency-check" % "0.1.7")
+
+// sbt-errors-summary sumamrises all errors in sbt in a nicer interface - See https://github.com/Duhemm/sbt-errors-summary
+resolvers += Resolver.bintrayIvyRepo("duhemm", "sbt-plugins")
+addSbtPlugin("org.duhemm" % "sbt-errors-summary" % "0.2.0")
