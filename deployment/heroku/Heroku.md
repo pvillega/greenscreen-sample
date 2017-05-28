@@ -24,14 +24,30 @@ Following the [12 factor](https://12factor.net/config) approach, Heroku stores c
 the application level. This means we can use environment variable substitution to set up different environments, without
 having to create independent `dev` and `prod` configurations.
 
-There is a known TLS issue with Secure WebSockets and custom signed TLS certificates in which some browsers, like Firefox,
-reject these type of connections. For this purpose we include a flag that allows us to disable TLS at will for development
-environments. This flag has been added to the `bin/startDev.sh` script. 
- 
-The flag is also useful when deploying to Free Heroku nodes as TLS support is only available for paid nodes, which means
-dev and staging areas could not use it anyway.
-
 See more information on how to add env variables to your nodes in [the documentation](https://devcenter.heroku.com/articles/config-vars)
+
+### TLS
+
+Heroku offers [free certificates](https://devcenter.heroku.com/articles/automated-certificate-management) using 
+[Let's Encrypt](https://letsencrypt.org/) for paid applications. That includes managing renewal of certs. Free applications
+can be accessed via https with a Heroku-owned certificate.
+
+There is a known TLS issue with Secure WebSockets and custom signed TLS certificates in which some browsers, like Firefox,
+reject these type of connections. This means we can't use TLS connections in our local computer for development.
+It's common to fix this issue by providing *protocol agnostic paths* when referring to an url, that is `//path` vs 
+`https://path`. The issue is that those protocols are not secure, as they allow a potential attacker to hijack connections
+by using a non-TLS path in production.
+
+To avoid this we set the paths to use for Http and Websockets in config, based on a flag `DEV_ENV` that is false by default 
+and we enable specifically in the `bin/startDev.sh` script. It's a crude workaround but solves the issue.
+
+### External Url
+
+When creating url's for Websockets or similar protocols we need the externally accessible url of the application. This can
+be provided via the env variable `EXTERNAL_URL` which defaults to `0.0.0.0` if not set.
+
+The configuration class has a `serverPath` value which uses the external url, application port, and server context to build
+the url path for external requests.
 
 ### Logging
 
@@ -81,7 +97,7 @@ environment, which can help finding issues with config.
 
 Any environment variables to be set are added to file `.env` in root.
 
-To launch the application this way, use `bin/startLocal.sh`
+To launch the application this way, use `bin/startLocal.sh`. This will create a new deployable via `sbt stage` and run it.
 
 ### Deployment to Heroku development/staging
 

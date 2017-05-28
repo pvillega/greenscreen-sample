@@ -16,8 +16,6 @@
 
 package com.aracon.greenscreen.config
 
-import java.nio.file.Path
-
 import scala.util.Properties._
 import java.util.concurrent.{ ExecutorService, Executors }
 
@@ -28,23 +26,27 @@ import doobie.util.transactor.DriverManagerTransactor
 import eu.timepit.refined.auto._
 
 final case class DbConfig(driver: NonEmptyString, url: NonEmptyString, user: NonEmptyString, password: String)
-final case class TlsKeyStore(enabled: Boolean, path: Path, password: NonEmptyString, managerPassword: NonEmptyString)
-final case class Server(interface: NonEmptyString, port: ServerPort, prefix: String)
-final case class Settings(server: Server, tlsKeyStore: TlsKeyStore, db: DbConfig)
+final case class Server(externalUrl: NonEmptyString, interface: NonEmptyString, port: ServerPort, prefix: String)
+final case class Env(isDev: Boolean)
+final case class Settings(env: Env, server: Server, db: DbConfig)
 
 final case class Config(settings: Settings) {
   // shortcuts for easy access to config values
-  val server: Server           = settings.server
-  val tlsKeyStore: TlsKeyStore = settings.tlsKeyStore
-  val db: DbConfig             = settings.db
+  val server: Server = settings.server
+  val db: DbConfig   = settings.db
+  val isDev: Boolean = settings.env.isDev
 
-  val interface: String = server.interface
-  val appPrefix: String = server.prefix
-  val port: Int         = server.port
+  val externalUrl: String = server.externalUrl
+  val interface: String   = server.interface
+  val port: Int           = server.port
+  val appPrefix: String   = server.prefix
+  val serverPath: String  = s"$externalUrl$appPrefix"
 
   // Due to issues with self-signed certs and secure webSockets we need to support non-tls options for development environment
-  val httpProtocol: String = if (tlsKeyStore.enabled) "https" else "http"
-  val wsProtocol: String   = if (tlsKeyStore.enabled) "wss" else "ws"
+  val httpProtocol: String = if (isDev) "http" else "https"
+  val httpBaseUrl: String  = s"$httpProtocol://$serverPath"
+  val wsProtocol: String   = if (isDev) "ws" else "wss"
+  val wsBaseUrl: String    = s"$wsProtocol://$serverPath"
 
   // Working directory of the application
   val workPath: String = propOrEmpty("user.dir")

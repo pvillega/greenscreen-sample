@@ -20,7 +20,6 @@ import cats.implicits._
 import com.aracon.greenscreen.config.{ Config, Settings }
 import com.aracon.greenscreen.db.migration.FlywayMigration
 import com.aracon.greenscreen.service.{ HelloWorldService, WebSocketService }
-import org.http4s.server.SSLSupport.StoreInfo
 import org.http4s.server.blaze.BlazeBuilder
 import org.http4s.server.metrics._
 import org.http4s.server.syntax._
@@ -44,7 +43,7 @@ object Main extends ServerApp with Loggable {
       config => {
         val rootService = configureAppServices(config)
 
-        builder(config)
+        BlazeBuilder
           .bindHttp(config.port, config.interface)
           .enableHttp2(true)
           .withWebSockets(true)
@@ -63,15 +62,6 @@ object Main extends ServerApp with Loggable {
       "/metrics" -> metricsService(config.metricRegistry)
     )
   }
-
-  // Due to some webSocket issues with local development, we need to disable TLS during development
-  private def builder(config: Config): BlazeBuilder =
-    if (config.tlsKeyStore.enabled) {
-      BlazeBuilder.withSSL(StoreInfo(config.tlsKeyStore.path.toString, config.tlsKeyStore.password),
-                           keyManagerPassword = config.tlsKeyStore.managerPassword)
-    } else {
-      BlazeBuilder
-    }
 
   private def preStartOperations(): Either[String, Config] =
     for {

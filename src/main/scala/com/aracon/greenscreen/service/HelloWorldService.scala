@@ -33,7 +33,7 @@ object HelloWorldService extends Loggable {
     HttpService {
       case GET -> Root =>
         // Supports Play Framework template -- see src/main/twirl.
-        Ok(html.index(s"${config.wsProtocol}://${config.interface}:${config.port}${config.appPrefix}/ws"))
+        Ok(html.index(s"${config.wsBaseUrl}/ws"))
 
       case GET -> Root / "test" =>
         val tests = DBQueries.getAllTests(config.doobieTransactor).unsafePerformIO

@@ -31,7 +31,7 @@ export JAVA_OPTS="$JAVA_OPTS\
  -XX:+PerfDisableSharedMem\
  -XX:+UseTLAB"
 
-CONFIG_OPT="-v -DENABLE_TLS=false"
+CONFIG_OPT="-v -DDEV_ENV=true"
 
 echo "Running server locally. This requires a local postgres db running, check script 'psql/startPostgresSocker.sh' in this same folder to run one using docker."
 sbt ${CONFIG_OPT} run
