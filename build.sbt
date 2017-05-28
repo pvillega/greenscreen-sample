@@ -7,7 +7,7 @@ val wartRemoverExclusions = List(Wart.NonUnitStatements)
 lazy val greenscreen =
   project
     .in(file("."))
-    .enablePlugins(AutomateHeaderPlugin, GitVersioning, SbtTwirl, sbtdocker.DockerPlugin, AshScriptPlugin)
+    .enablePlugins(AutomateHeaderPlugin, GitVersioning, SbtTwirl, JavaAppPackaging)
     .settings(settings)
     .settings(
       wartremoverErrors ++= Warts.unsafe.filterNot(wartRemoverExclusions.contains),
@@ -23,7 +23,6 @@ lazy val greenscreen =
         library.doobie("-postgres-cats"),
         library.dwMetrics("-core"),
         library.dwMetrics("-json"),
-        library.fluentLogger,
         library.flywayDb,
         library.http4s("-blaze-server"),
         library.http4s("-circe"),
@@ -53,7 +52,6 @@ lazy val library =
       val circe      = "0.8.0"
       val doobie     = "0.4.1"
       val dwMetrics  = "3.2.2"
-      val fluentLogger = "0.7.0"
       val flywayDb   = "4.2.0"
       val http4s     = "0.15.12"
       val logback    = "1.2.3"
@@ -73,8 +71,6 @@ lazy val library =
     def doobie(stuff: String): ModuleID = "org.tpolecat" %% s"doobie$stuff" % Version.doobie
     // Adds Dropwizard metrics to the application - https://github.com/dropwizard/metrics
     def dwMetrics(stuff: String): ModuleID = "io.dropwizard.metrics" % s"metrics$stuff" % Version.dwMetrics
-    // Library for Fluentd logging, required for GCP - https://github.com/fluent/fluentd
-    val fluentLogger: ModuleID = "org.fluentd" %% "fluent-logger-scala" % Version.fluentLogger
     // Database migrations tool - https://flywaydb.org/getstarted/why
     val flywayDb: ModuleID = "org.flywaydb" % "flyway-core" % Version.flywayDb
     // web server library - http://http4s.org/
@@ -194,20 +190,20 @@ lazy val headerSettings =
   )
 
 // *****************************************************************************
-// Docker file
+// Docker file - commented out as we don't use GKE by now. Plugins for sbt-docker have also been removed from project
 // *****************************************************************************
-dockerfile in docker := {
-  val appDir: File = stage.value
-  val targetDir = "/app"
-  val serverTlsCert : File = file("./selfsigned.jks")
-
-  new Dockerfile {
-    from("openjdk:8-jdk-alpine")
-    env("JDBC_DATABASE_URL", "jdbc:postgresql://postgres-master:5432/postgres")
-    env("JAVA_OPTS", "-Dconfig.resource=application.dev.conf")
-    copy(appDir, targetDir)
-    copy(serverTlsCert, targetDir)
-    workDir(targetDir)
-    entryPoint(s"bin/${executableScriptName.value}")
-  }
-}
+//dockerfile in docker := {
+//  val appDir: File = stage.value
+//  val targetDir = "/app"
+//  val serverTlsCert : File = file("./selfsigned.jks")
+//
+//  new Dockerfile {
+//    from("openjdk:8-jdk-alpine")
+//    env("JDBC_DATABASE_URL", "jdbc:postgresql://postgres-master:5432/postgres")
+//    env("JAVA_OPTS", "-Dconfig.resource=application.dev.conf")
+//    copy(appDir, targetDir)
+//    copy(serverTlsCert, targetDir)
+//    workDir(targetDir)
+//    entryPoint(s"bin/${executableScriptName.value}")
+//  }
+//}

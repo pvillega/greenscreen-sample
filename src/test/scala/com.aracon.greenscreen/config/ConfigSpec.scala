@@ -27,19 +27,17 @@ import eu.timepit.refined.pureconfig._
 class ConfigSpec extends SpecTrait {
 
   "Hardcoded configuration" - {
-    val confFiles = List("", ".dev", ".prod").map(s => s"application$s.conf")
+    val confFile = "application.conf"
     "is valid and can be loaded by pure config" - {
-      confFiles.foreach { file =>
-        s"Testing config for file $file" in {
-          // we load files explicitly, to avoid System.setValue magic
-          val resource = Thread.currentThread().getContextClassLoader.getResource(file)
-          val path     = Paths.get(resource.toURI)
+      s"Testing config for file $confFile" in {
+        // we load files explicitly, to avoid System.setValue magic
+        val resource = Thread.currentThread().getContextClassLoader.getResource(confFile)
+        val path     = Paths.get(resource.toURI)
 
-          loadConfig[Settings](path).fold(
-            err => fail(s"Error loading configuration: $err."),
-            _ => ()
-          )
-        }
+        loadConfig[Settings](path).fold(
+          err => fail(s"Error loading configuration: $err."),
+          _ => ()
+        )
       }
     }
   }

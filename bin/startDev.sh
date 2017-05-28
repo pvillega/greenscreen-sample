@@ -8,6 +8,7 @@ DUMP_LOG="$dir/../log/dump-`date +%Y-%m-%d:%H:%M:%S`.hprof"
 
 # See http://blog.sokolenko.me/2014/11/javavm-options-production.html
 # See http://www.oracle.com/technetwork/tutorials/tutorials-1876574.html for G1 garbage collector
+# See https://devcenter.heroku.com/articles/java-support for Heroku limitations imposed on Heroku processes
 export JAVA_OPTS="$JAVA_OPTS\
  -server\
  -Dfile.encoding=UTF8\
@@ -30,7 +31,7 @@ export JAVA_OPTS="$JAVA_OPTS\
  -XX:+PerfDisableSharedMem\
  -XX:+UseTLAB"
 
-CONFIG_OPT="-v -Dconfig.resource=application.dev.conf"
+CONFIG_OPT="-v -DENABLE_TLS=false"
 
 echo "Running server locally. This requires a local postgres db running, check script 'psql/startPostgresSocker.sh' in this same folder to run one using docker."
 sbt ${CONFIG_OPT} run

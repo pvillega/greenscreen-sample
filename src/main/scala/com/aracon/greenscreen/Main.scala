@@ -29,6 +29,7 @@ import org.http4s.{ HttpService, Request, Response, Service }
 import pureconfig._
 import eu.timepit.refined.auto._
 import eu.timepit.refined.pureconfig._
+
 import scalaz.concurrent.Task
 
 object Main extends ServerApp with Loggable {
@@ -92,9 +93,9 @@ object Main extends ServerApp with Loggable {
     FlywayMigration
       .startMigration(config.db)
       .toEither
-      .map(n => info(s"Successfully applied $n migrations to the database with url ${config.db.url}"))
+      .map(n => info(s"Successfully applied $n migrations to the database"))
       .leftMap { ex =>
-        s"Error while applying migrations to the database with url ${config.settings.db.url}: ${ex.getMessage}\n ${ex.getStackTrace
+        s"Error while applying migrations to the database: ${ex.getMessage}\n ${ex.getStackTrace
           .mkString("\n")}"
       }
   }

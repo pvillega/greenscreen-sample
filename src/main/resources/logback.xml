@@ -19,9 +19,9 @@
             <!-- daily rollover -->
             <fileNamePattern>log/greenscreen.%d{yyyy-MM-dd}.log</fileNamePattern>
 
-            <!-- keep 30 days' worth of history capped at 3GB total size -->
+            <!-- keep 30 days' worth of history capped at 1GB total size -->
             <maxHistory>30</maxHistory>
-            <totalSizeCap>3GB</totalSizeCap>
+            <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
 
         <encoder>
@@ -37,9 +37,9 @@
             <!-- daily rollover -->
             <fileNamePattern>log/doobie.%d{yyyy-MM-dd}.log</fileNamePattern>
 
-            <!-- keep 30 days' worth of history capped at 3GB total size -->
+            <!-- keep 30 days' worth of history capped at 1GB total size -->
             <maxHistory>30</maxHistory>
-            <totalSizeCap>3GB</totalSizeCap>
+            <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
 
         <encoder>

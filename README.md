@@ -101,6 +101,7 @@ should become part of Doobie in 0.4.2/0.4.3, but in the meantime we need it.
 
 We use [FlyWay](https://flywaydb.org/getstarted/why) to manage database migrations.
 
+To run migrations locally against your local dev database use script `bin/psql/runMigrations.sh`
 
 ## Server stuff
 
@@ -140,6 +141,12 @@ Please see [GCP_Readme](deployment/google_compute_engine/GCP_Readme.md) on `depl
 Please see [Kubernetes_Readme](deployment/gcp_kubernetes/GCP_Kubernetes.md) on `deployment` folder for more information
 
 Includes instructions on how to setup [Concourse](https://concourse.ci/index.html) for CI tasks
+
+###  Deploying To Heroku
+
+Please see [Heroku's Readme](deployment/heroku/Heroku.md) on `deployment` folder for more information
+
+NOTE: As of 27th May 2017 Heroku doesn't support Http/2 yet. 
 
 ## Contribution policy ##
 
