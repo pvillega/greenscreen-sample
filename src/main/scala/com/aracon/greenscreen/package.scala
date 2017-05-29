@@ -22,7 +22,7 @@ import eu.timepit.refined.W
 import eu.timepit.refined.api.{ RefType, Refined, Validate }
 import eu.timepit.refined.collection.NonEmpty
 import eu.timepit.refined.numeric.{ Greater, Positive }
-import pureconfig.{ CamelCase, ConfigFieldMapping, ProductHint }
+import pureconfig._
 
 import scala.reflect.ClassTag
 import scala.reflect.runtime.universe._
@@ -38,7 +38,7 @@ package object greenscreen {
   type NonEmptyString = String Refined NonEmpty
   type ServerPort     = Int Refined Greater[W.`1024`.T]
 
-  // PureConfig 0.6.0: Force PureConfig to expect .conf keys as CamelCase instead of kebab-case-key
+  // PureConfig 0.6.0+: Force PureConfig to expect .conf keys as CamelCase instead of kebab-case-key
   implicit def productHint[T]: ProductHint[T] = ProductHint[T](ConfigFieldMapping(CamelCase, CamelCase))
 
   // Fixed on Doobie 0.4.2? Allows generation of doobie Meta objects from Refined types
