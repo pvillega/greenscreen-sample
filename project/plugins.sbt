@@ -46,3 +46,6 @@ addSbtPlugin("net.vonbuchholtz" % "sbt-dependency-check" % "0.1.7")
 // sbt-errors-summary sumamrises all errors in sbt in a nicer interface - See https://github.com/Duhemm/sbt-errors-summary
 resolvers += Resolver.bintrayIvyRepo("duhemm", "sbt-plugins")
 addSbtPlugin("org.duhemm" % "sbt-errors-summary" % "0.2.0")
+
+// sbt-buildinfo generates Scala source from your build definitions - See https://github.com/sbt/sbt-buildinfo
+addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.7.0")

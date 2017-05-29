@@ -19,7 +19,7 @@ package com.aracon.greenscreen
 import cats.implicits._
 import com.aracon.greenscreen.config.{ Config, Settings }
 import com.aracon.greenscreen.db.migration.FlywayMigration
-import com.aracon.greenscreen.service.{ HelloWorldService, WebSocketService }
+import com.aracon.greenscreen.service.{ HelloWorldService, StatusService, WebSocketService }
 import org.http4s.server.blaze.BlazeBuilder
 import org.http4s.server.metrics._
 import org.http4s.server.syntax._
@@ -55,7 +55,7 @@ object Main extends ServerApp with Loggable {
 
   private def configureAppServices(config: Config): HttpService = {
     val appServices: Service[Request, Response] =
-    HelloWorldService.service(config) orElse WebSocketService.service
+    HelloWorldService.service(config) orElse StatusService.service(config) orElse WebSocketService.service
 
     Router(
       ""         -> Metrics(config.metricRegistry, "services")(appServices),
