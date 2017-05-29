@@ -16,10 +16,13 @@
 
 package com.aracon.greenscreen
 
+import java.util.concurrent.TimeUnit
+
 import cats.implicits._
 import com.aracon.greenscreen.config.{ Config, Settings }
 import com.aracon.greenscreen.db.migration.FlywayMigration
 import com.aracon.greenscreen.service.{ HelloWorldService, StatusService, WebSocketService }
+import com.librato.metrics.reporter.Librato
 import org.http4s.server.blaze.BlazeBuilder
 import org.http4s.server.metrics._
 import org.http4s.server.syntax._
@@ -28,6 +31,7 @@ import org.http4s.{ HttpService, Request, Response, Service }
 import pureconfig._
 import eu.timepit.refined.auto._
 import eu.timepit.refined.pureconfig._
+import pureconfig.error.ConfigReaderException
 
 import scalaz.concurrent.Task
 
@@ -36,9 +40,9 @@ object Main extends ServerApp with Loggable {
   override def server(args: List[String]): Task[Server] =
     preStartOperations().fold(
       err => {
-        error(err)
+        error(err.getMessage, err)
         error("Errors during pre-Start phase. Program will now exit.")
-        Task.fail(new RuntimeException(err))
+        Task.fail(err)
       },
       config => {
         val rootService = configureAppServices(config)
@@ -57,36 +61,49 @@ object Main extends ServerApp with Loggable {
     val appServices: Service[Request, Response] =
     HelloWorldService.service(config) orElse StatusService.service(config) orElse WebSocketService.service
 
-    Router(
-      ""         -> Metrics(config.metricRegistry, "services")(appServices),
-      "/metrics" -> metricsService(config.metricRegistry)
-    )
+    // we want to disable metrics url in production so attackers can't access the data. We will get them via backend services like Librato
+    val metricsRoute: List[(String, HttpService)] =
+      if (config.isDev) ("/metrics" -> metricsService(config.metricRegistry)) :: Nil else Nil
+    val routes
+      : List[(String, HttpService)] = ("" -> Metrics(config.metricRegistry, "services")(appServices)) :: metricsRoute
+
+    Router(routes: _*)
   }
 
-  private def preStartOperations(): Either[String, Config] =
+  private def preStartOperations(): Either[Throwable, Config] =
     for {
       settings <- loadAppConfiguration()
       conf = Config(settings)
+      _ <- initialiseLibrato(conf)
       _ <- runDBMigrations(conf)
     } yield conf
 
-  private def loadAppConfiguration(): Either[String, Settings] = {
-    info(s"Current working folder: ${System.getProperty("user.dir")}")
+  private def loadAppConfiguration(): Either[Throwable, Settings] = {
     info("Initialising the config object")
+
     loadConfig[Settings]
-      .leftMap(err => s"Error loading configuration: $err")
+      .leftMap(ConfigReaderException(_))
   }
 
-  private def runDBMigrations(config: Config): Either[String, Unit] = {
+  private def initialiseLibrato(config: Config): Either[Throwable, Unit] = {
+    info("Linking metrics to Librato provider")
+
+    Either
+      .catchNonFatal(
+        Librato
+          .reporter(config.metricRegistry, config.librato.user, config.librato.token)
+          .setSource(config.server.externalUrl)
+          .start(10, TimeUnit.SECONDS)
+      )
+      .map(_ => info(s"Successfully configured Librato"))
+  }
+
+  private def runDBMigrations(config: Config): Either[Throwable, Unit] = {
     info("Starting database migrations with Flyway")
 
     FlywayMigration
       .startMigration(config.db)
       .toEither
       .map(n => info(s"Successfully applied $n migrations to the database"))
-      .leftMap { ex =>
-        s"Error while applying migrations to the database: ${ex.getMessage}\n ${ex.getStackTrace
-          .mkString("\n")}"
-      }
   }
 }

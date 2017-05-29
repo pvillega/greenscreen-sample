@@ -16,25 +16,28 @@
 
 package com.aracon.greenscreen.config
 
-import scala.util.Properties._
 import java.util.concurrent.{ ExecutorService, Executors }
 
-import com.codahale.metrics.MetricRegistry
 import com.aracon.greenscreen._
+import com.codahale.metrics.MetricRegistry
 import doobie.imports.{ IOLite, Transactor }
 import doobie.util.transactor.DriverManagerTransactor
 import eu.timepit.refined.auto._
 
+import scala.util.Properties._
+
 final case class DbConfig(driver: NonEmptyString, url: NonEmptyString, user: NonEmptyString, password: String)
 final case class Server(externalUrl: NonEmptyString, interface: NonEmptyString, port: ServerPort, prefix: String)
+final case class LibratoConfig(user: NonEmptyString, password: NonEmptyString, token: NonEmptyString)
 final case class Env(isDev: Boolean)
-final case class Settings(env: Env, server: Server, db: DbConfig)
+final case class Settings(env: Env, server: Server, db: DbConfig, librato: LibratoConfig)
 
 final case class Config(settings: Settings) {
   // shortcuts for easy access to config values
-  val server: Server = settings.server
-  val db: DbConfig   = settings.db
-  val isDev: Boolean = settings.env.isDev
+  val server: Server         = settings.server
+  val db: DbConfig           = settings.db
+  val isDev: Boolean         = settings.env.isDev
+  val librato: LibratoConfig = settings.librato
 
   val externalUrl: String = server.externalUrl
   val interface: String   = server.interface
@@ -54,7 +57,7 @@ final case class Config(settings: Settings) {
   // Default executor pool of the server. It may be a good idea to create a different pool for cpu-intensive tasks
   val defaultPool: ExecutorService = Executors.newCachedThreadPool()
 
-  // Common metrics registry of the application. There should be only one per server
+  // Common metrics registry of the application. There should be only one per server.
   val metricRegistry = new MetricRegistry()
 
   // Currently uses IOLite monad for IO in Doobie, may be replaced later on for performance

@@ -89,6 +89,21 @@ commands before deploying the application. Although this would be the ideal plac
 run `sbt` commands in this step, so we can't use it correctly. It also didn't stop deployment on error, so it needs more
 testing before adopting.
 
+### Metrics
+
+We want to use application metrics to monitor application performance, detect issues, and alert on thresholds. 
+  
+Heroku offers several addons, like [Librato](https://elements.heroku.com/addons/librato) which provides a
+[library](https://github.com/librato/metrics-librato) we can integrate with [Dropwizard's metrics](https://github.com/dropwizard/metrics)
+which in turn is a metrics library supported by Http4s.
+
+In development we provide an endpoint (`metrics.json`) that allows us to check metrics directly. We disable this in production
+to avoid exposing potentially sensitive data to the internet. In prod, tools like Librato will amalgamate the data.
+
+### HealthChecks
+
+TODO
+
 ### Local testing
 
 Heroku CLI provides a tool to run the application [locally](https://devcenter.heroku.com/articles/heroku-local) using the 

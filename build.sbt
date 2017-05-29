@@ -31,6 +31,7 @@ lazy val greenscreen =
         library.http4s("-dsl"),
         library.http4s("-server-metrics"),
         library.http4s("-twirl"),
+        library.librato,
         library.logback,
         library.nscala,
         library.pureConfig,
@@ -56,6 +57,7 @@ lazy val library =
       val dwMetrics  = "3.2.2"
       val flywayDb   = "4.2.0"
       val http4s     = "0.15.13"
+      val librato    = "5.0.5"
       val logback    = "1.2.3"
       val nscala     = "2.16.0"
       val pureConfig = "0.7.0"
@@ -77,6 +79,8 @@ lazy val library =
     val flywayDb: ModuleID = "org.flywaydb" % "flyway-core" % Version.flywayDb
     // web server library - http://http4s.org/
     def http4s(stuff: String): ModuleID = "org.http4s" %% s"http4s$stuff" % Version.http4s
+    // metrics library - https://github.com/librato/metrics-librato
+    val librato: ModuleID = "com.librato.metrics" % "metrics-librato" % Version.librato
     // Logging library - https://logback.qos.ch/
     val logback: ModuleID = "ch.qos.logback" % "logback-classic" % Version.logback
     // Joda Time for Scala - https://github.com/nscala-time/nscala-time
