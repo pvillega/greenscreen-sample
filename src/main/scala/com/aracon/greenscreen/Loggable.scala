@@ -24,6 +24,9 @@ trait Loggable {
   def info(msg: String): Unit =
     logger.info(msg)
 
+  def warn(msg: String): Unit =
+    logger.warn(msg)
+
   def error(msg: String): Unit =
     logger.error(msg)
 

@@ -90,12 +90,17 @@ object Main extends ServerApp with Loggable {
 
     Either
       .catchNonFatal(
-        Librato
-          .reporter(config.metricRegistry, config.librato.user, config.librato.token)
-          .setSource(config.server.externalUrl)
-          .start(10, TimeUnit.SECONDS)
+        if (config.isDev) {
+          warn(s"Skipping Librato in DEV environments")
+        } else {
+          Librato
+            .reporter(config.metricRegistry, config.librato.user, config.librato.token)
+            .setSource(config.server.externalUrl)
+            .start(10, TimeUnit.SECONDS)
+
+          info(s"Successfully configured Librato")
+        }
       )
-      .map(_ => info(s"Successfully configured Librato"))
   }
 
   private def runDBMigrations(config: Config): Either[Throwable, Unit] = {

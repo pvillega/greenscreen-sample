@@ -29,6 +29,11 @@ class ConfigSpec extends SpecTrait {
   "Hardcoded configuration" - {
     val confFile = "application.conf"
     "is valid and can be loaded by pure config" - {
+      // The following env vars are required as our config expects env vars to set the proper values, failing if they are not set.
+      // This ensures the run environments are properly setup
+      val requiredEnvVars = Map("LIBRATO_USER" -> "none", "LIBRATO_PASSWORD" -> "none", "LIBRATO_TOKEN" -> "none")
+      requiredEnvVars.foreach { case (k, v) => System.setProperty(k, v) }
+
       s"Testing config for file $confFile" in {
         // we load files explicitly, to avoid System.setValue magic
         val resource = Thread.currentThread().getContextClassLoader.getResource(confFile)
