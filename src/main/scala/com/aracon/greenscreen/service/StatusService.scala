@@ -25,15 +25,7 @@ import org.http4s.circe._
 import org.http4s.dsl._
 import org.joda.time.DateTime
 
-/*
-This class takes advantage of https://github.com/sbt/sbt-buildinfo and https://github.com/sbt/sbt-git to generate
-a status page with information about the release
-
-See http://blog.byjean.eu/2015/07/10/painless-release-with-sbt.html for more details
- */
 object StatusService extends Loggable {
-
-  //TODO: secure so it is not available public internet, same for metrics!!!
 
   def service(config: Config): Service[Request, Response] =
     HttpService {
@@ -42,7 +34,9 @@ object StatusService extends Loggable {
           ("timestamp", Json.fromString(DateTime.now().toString)),
           ("development", Json.fromBoolean(config.isDev)),
           ("name", Json.fromString(BuildInfo.name)),
-          ("version", Json.fromString(BuildInfo.version)),
+          ("version", Json.fromString(BuildInfo.version))
+        )
+        val sensitiveInfo = Json.obj(
           ("scalaVersion", Json.fromString(BuildInfo.scalaVersion)),
           ("sbtVersion", Json.fromString(BuildInfo.sbtVersion)),
           ("externalUrl", Json.fromString(config.externalUrl)),
@@ -50,7 +44,8 @@ object StatusService extends Loggable {
           ("bind-interface", Json.fromString(config.interface)),
           ("bind-port", Json.fromInt(config.port))
         )
-        // it should return ServiceUnavailable(status) if some health check fails
+        info(status.deepMerge(sensitiveInfo).spaces2)
+        // only make available non-dangerous information
         Ok(status)
     }
 }

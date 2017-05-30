@@ -100,9 +100,20 @@ which in turn is a metrics library supported by Http4s.
 In development we provide an endpoint (`metrics.json`) that allows us to check metrics directly. We disable this in production
 to avoid exposing potentially sensitive data to the internet. In prod, tools like Librato will amalgamate the data.
 
-### HealthChecks
+Heroku also provides [metrics](https://devcenter.heroku.com/articles/application-metrics-beta) for paid plans, which may be good
+enough without requiring extra metrics addons.
 
-TODO
+### HealthChecks and Status page
+
+Ideally we would like to provide a detailed [Status page format](https://github.com/pvillega/SE4/blob/master/SE4.md) complemented
+by [Dropwizard Health checks](http://metrics.dropwizard.io/3.2.2/manual/healthchecks.html).
+
+Unfortunately in environments like Heroku where you can't configure the firewalls, that would expose too much information 
+to internet. So we are restricted to whatever is offered by the metrics plugin we use, which may be enough.
+
+The application includes a `StatusService` that provides some information about the application, like version number, by 
+taking advantage of [sbt-buildinfo](https://github.com/sbt/sbt-buildinfo) and [sbt-git](https://github.com/sbt/sbt-git)
+to generate [information about the release](http://blog.byjean.eu/2015/07/10/painless-release-with-sbt.html).
 
 ### Local testing
 
