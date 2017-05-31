@@ -23,6 +23,7 @@ import com.codahale.metrics.MetricRegistry
 import doobie.imports.{ IOLite, Transactor }
 import doobie.util.transactor.DriverManagerTransactor
 import eu.timepit.refined.auto._
+import cron4s.expr.CronExpr
 
 import scala.util.Properties._
 
@@ -30,13 +31,15 @@ final case class DbConfig(driver: NonEmptyString, url: NonEmptyString, user: Non
 final case class Server(externalUrl: NonEmptyString, interface: NonEmptyString, port: ServerPort, prefix: String)
 final case class LibratoConfig(user: NonEmptyString, password: NonEmptyString, token: NonEmptyString)
 final case class Flags(isDev: Boolean, switchThisOn: Boolean)
-final case class Settings(flags: Flags, server: Server, db: DbConfig, librato: LibratoConfig)
+final case class Scheduler(frequency: CronExpr)
+final case class Settings(flags: Flags, server: Server, db: DbConfig, librato: LibratoConfig, scheduler: Scheduler)
 
 final case class Config(settings: Settings) {
   // shortcuts for easy access to config values
   val flags: Flags           = settings.flags
   val server: Server         = settings.server
   val db: DbConfig           = settings.db
+  val scheduler: Scheduler   = settings.scheduler
   val librato: LibratoConfig = settings.librato
 
   val isDev: Boolean = flags.isDev

@@ -16,6 +16,8 @@
 
 package com.aracon
 
+import cron4s.Cron
+import cron4s.expr.CronExpr
 import doobie.imports.{ Composite, Meta }
 import doobie.util.invariant.InvalidObjectMapping
 import eu.timepit.refined.W
@@ -23,6 +25,7 @@ import eu.timepit.refined.api.{ RefType, Refined, Validate }
 import eu.timepit.refined.collection.NonEmpty
 import eu.timepit.refined.numeric.{ Greater, Positive }
 import pureconfig._
+import pureconfig.ConvertHelpers._
 
 import scala.reflect.ClassTag
 import scala.reflect.runtime.universe._
@@ -40,6 +43,9 @@ package object greenscreen {
 
   // PureConfig 0.6.0+: Force PureConfig to expect .conf keys as CamelCase instead of kebab-case-key
   implicit def productHint[T]: ProductHint[T] = ProductHint[T](ConfigFieldMapping(CamelCase, CamelCase))
+
+  // ConfigReader to parse Cron expressions via PureConfig
+  implicit val cronConfigReader: ConfigReader[CronExpr] = ConfigReader.fromString[CronExpr](tryF(Cron.tryParse))
 
   // Fixed on Doobie 0.4.2? Allows generation of doobie Meta objects from Refined types
   @SuppressWarnings(Array("org.wartremover.warts.Throw"))

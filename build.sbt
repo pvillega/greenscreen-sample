@@ -21,6 +21,7 @@ lazy val greenscreen =
         library.circe("-literal"),
         library.circe("-parser"),
         library.circe("-refined"),
+        library.cron4s,
         library.doobie("-core-cats"),
         library.doobie("-postgres-cats"),
         library.dwMetrics("-core"),
@@ -53,6 +54,7 @@ lazy val library =
       val alpn       = "8.1.11.v20170118"
       val cats       = "0.9.0"
       val circe      = "0.8.0"
+      val cron4s     = "0.4.0"
       val doobie     = "0.4.1"
       val dwMetrics  = "3.2.2"
       val flywayDb   = "4.2.0"
@@ -71,6 +73,8 @@ lazy val library =
     val cats: ModuleID = "org.typelevel" %% "cats" % Version.cats
     // JSON library for scala - https://circe.github.io/circe/
     def circe(stuff: String): ModuleID = "io.circe" %% s"circe$stuff" % Version.circe
+    // Idiomatic Cron expression parsing in Scala - https://alonsodomin.github.io/cron4s/
+    val cron4s: ModuleID = "com.github.alonsodomin.cron4s" %% "cron4s-core" % Version.cron4s
     // JDBC layer for scala - https://github.com/tpolecat/doobie
     def doobie(stuff: String): ModuleID = "org.tpolecat" %% s"doobie$stuff" % Version.doobie
     // Adds Dropwizard metrics to the application - https://github.com/dropwizard/metrics
