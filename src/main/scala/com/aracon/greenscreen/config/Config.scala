@@ -29,15 +29,17 @@ import scala.util.Properties._
 final case class DbConfig(driver: NonEmptyString, url: NonEmptyString, user: NonEmptyString, password: String)
 final case class Server(externalUrl: NonEmptyString, interface: NonEmptyString, port: ServerPort, prefix: String)
 final case class LibratoConfig(user: NonEmptyString, password: NonEmptyString, token: NonEmptyString)
-final case class Env(isDev: Boolean)
-final case class Settings(env: Env, server: Server, db: DbConfig, librato: LibratoConfig)
+final case class Flags(isDev: Boolean, switchThisOn: Boolean)
+final case class Settings(flags: Flags, server: Server, db: DbConfig, librato: LibratoConfig)
 
 final case class Config(settings: Settings) {
   // shortcuts for easy access to config values
+  val flags: Flags           = settings.flags
   val server: Server         = settings.server
   val db: DbConfig           = settings.db
-  val isDev: Boolean         = settings.env.isDev
   val librato: LibratoConfig = settings.librato
+
+  val isDev: Boolean = flags.isDev
 
   val externalUrl: String = server.externalUrl
   val interface: String   = server.interface

@@ -115,6 +115,16 @@ The application includes a `StatusService` that provides some information about 
 taking advantage of [sbt-buildinfo](https://github.com/sbt/sbt-buildinfo) and [sbt-git](https://github.com/sbt/sbt-git)
 to generate [information about the release](http://blog.byjean.eu/2015/07/10/painless-release-with-sbt.html).
 
+### Feature flags
+ 
+Something often requested is the capability of toggling a feature on or off via a flag, so new functionality can be hidden
+in production until it is ready or just to allow disabling unstable components.
+
+Thankfully using Heroku this is quite simple, as modifying an environment variable causes the nodes to restart, which means
+we can just use standard configuration in `application.conf` and override the defaults with values from environment variables.
+
+There is an example of such flags being exposed in `HelloWorldService` at `flags` endpoint.
+
 ### Local testing
 
 Heroku CLI provides a tool to run the application [locally](https://devcenter.heroku.com/articles/heroku-local) using the 

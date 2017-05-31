@@ -47,6 +47,9 @@ object HelloWorldService extends Loggable {
         testDbTimer.update(System.nanoTime() - start, TimeUnit.NANOSECONDS)
 
         Ok(tests.asJson)
+
+      case GET -> Root / "flags" =>
+        Ok(config.flags.asJson)
     }
   }
 }
