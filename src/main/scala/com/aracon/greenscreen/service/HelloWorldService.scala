@@ -16,6 +16,8 @@
 
 package com.aracon.greenscreen.service
 
+import java.util.concurrent.TimeUnit
+
 import com.aracon.greenscreen.Loggable
 import com.aracon.greenscreen.config.Config
 import com.aracon.greenscreen.db.DBQueries
@@ -29,21 +31,22 @@ import org.http4s.dsl._
 import org.http4s.twirl._
 
 object HelloWorldService extends Loggable {
-  def service(config: Config): Service[Request, Response] =
+  def service(config: Config): Service[Request, Response] = {
+    val rootCount   = config.metricRegistry.counter("root-access")
+    val testDbTimer = config.metricRegistry.timer("test-db-time")
+
     HttpService {
       case GET -> Root =>
+        rootCount.inc()
         // Supports Play Framework template -- see src/main/twirl.
         Ok(html.index(s"${config.wsBaseUrl}/ws"))
 
       case GET -> Root / "test" =>
+        val start = System.nanoTime()
         val tests = DBQueries.getAllTests(config.doobieTransactor).unsafePerformIO
-        Ok(tests.asJson)
+        testDbTimer.update(System.nanoTime() - start, TimeUnit.NANOSECONDS)
 
-      case GET -> Root / "testError" =>
-        error("Testing an error message for error reporting on GCE without stacktrace")
-        error("Testing an exception message for error reporting on GCE with stacktrace",
-              new Exception("Fake exception here"))
-        val tests = DBQueries.getAllTests(config.doobieTransactor).unsafePerformIO
         Ok(tests.asJson)
     }
+  }
 }
