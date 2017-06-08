@@ -52,12 +52,19 @@ the url path for external requests.
 ### Logging
 
 Heroku will, by default, aggregate all logs from `Console` across all nodes of an application. To do so, our logback configuration
-*must* output to console.
+*must* output to console. This is good as you get logs for all nodes in a single place, without having to pull them individually.
 
 Please note the default Heroku log system doesn't store logs, it just aggregates logs across instances and has a tiny cache.
-To store log history you need an external [logging addon](https://elements.heroku.com/addons) for your application.
+To store log history you need an external [logging addon](https://elements.heroku.com/addons) for your application. For this
+example we integrated with [LogDNA](https://elements.heroku.com/addons/logdna).
 
-For this example we integrated with [LogDNA](https://elements.heroku.com/addons/logdna)
+Heroku also provides access logs as follows:
+
+```bash
+heroku[router] info at=info method=GET path="/greenscreen/test" host=greenscreen-staging.herokuapp.com request_id=02c622c1-78f3-4ebd-b8cc-3b1f904285ea fwd="80.5.146.209" dyno=web.1 connect=0ms service=39ms status=200 bytes=202 protocol=https
+```
+
+You can filter them by the key `heroku[router]`.
 
 ### Database
 

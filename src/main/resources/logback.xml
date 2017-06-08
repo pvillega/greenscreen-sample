@@ -7,7 +7,8 @@
     <!-- main appender to console -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger : %msg%n</pattern>
+            <!-- Heroku prepends time automatically - %d{HH:mm:ss.SSS} -->
+            <pattern>%-5level [%thread] %logger : %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -25,7 +26,8 @@
         </rollingPolicy>
 
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger : %msg%n</pattern>
+            <!-- Heroku prepends time automatically - %d{HH:mm:ss.SSS} -->
+            <pattern>%-5level [%thread] %logger : %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -43,7 +45,8 @@
         </rollingPolicy>
 
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger : %msg%n</pattern>
+            <!-- Heroku prepends time automatically - %d{HH:mm:ss.SSS} -->
+            <pattern>%-5level [%thread] %logger : %msg%n</pattern>z
         </encoder>
     </appender>
 
