@@ -26,6 +26,11 @@ Alternatively, within `sbt` console execute:
 
 App starts by default on port `8080`, and it's accessible via `http://127.0.0.1:8080/greenscreen/<path>`
 
+## QandA
+
+The questionnaire part is inspired by code of Channing Walton's project [Qanda](https://github.com/channingwalton/qanda).
+We used the Shapeless implementation as reference.
+
 ## Sbt plugins
 
 Some relevant plugins. Please check `plugins.sbt` for a comprehensive list along links to their websites.
@@ -110,19 +115,19 @@ To run migrations locally against your local dev database use script `bin/psql/r
 
 ## Server stuff
 
-## Metrics and health checks
+### Metrics and health checks
 
 We use Dropwizard metrics for [metrics](http://metrics.dropwizard.io/3.2.0/manual/core.html) and [health checks](http://metrics.dropwizard.io/3.2.0/manual/healthchecks.html)
 
 You can access the metrics at `http://127.0.0.1:8080/greenscreen/metrics`
 
-## Websockets and TLS
+### Websockets and TLS
 
 Unfortunately Firefox doesn't allow you to connect to websockets that use a self-signed certificate, even if you added
 an exception for the Certificate for normal Https requests. This means that we need to run the server without TLS in dev 
 mode, and enable TLS for prod. 
 
-## Http/2
+### Http/2
 
 Java 8 doesn't have the TLS keys required for Http/2. For that reason we need an external library, [ALPN](https://eclipse.org/jetty/documentation/current/alpn-chapter.html#alpn-versions). 
 Be aware the ALPN version is dependant on the JVM version so you may need to keep this up to date, manually,

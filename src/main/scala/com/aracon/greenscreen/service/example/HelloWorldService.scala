@@ -31,7 +31,7 @@ import org.http4s.dsl._
 import org.http4s.twirl._
 
 object HelloWorldService extends Loggable {
-  def service(config: Config): Service[Request, Response] = {
+  def service(config: Config): HttpService = {
     val rootCount   = config.metricRegistry.counter("root-access")
     val testDbTimer = config.metricRegistry.timer("test-db-time")
 

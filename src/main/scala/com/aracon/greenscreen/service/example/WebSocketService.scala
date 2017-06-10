@@ -16,40 +16,50 @@
 
 package com.aracon.greenscreen.service.example
 
+import fs2._
 import org.http4s._
 import org.http4s.dsl._
 import org.http4s.server.websocket._
 import org.http4s.websocket.WebsocketBits._
 
 import scala.concurrent.duration._
-import scalaz.concurrent.{ Strategy, Task }
-import scalaz.stream.async.unboundedQueue
-import scalaz.stream.time.awakeEvery
-import scalaz.stream.{ DefaultScheduler, Exchange, Process, Sink }
 
 object WebSocketService {
-  // current version uses scalaz-stream, this will need to be migrated to fs2 at some point
-  def service: Service[Request, Response] =
+  implicit val scheduler: Scheduler = Scheduler.fromFixedDaemonPool(2)
+  implicit val strategy: Strategy   = Strategy.fromFixedDaemonPool(8, threadName = "worker")
+
+  // An infinite stream of the periodic elapsed time
+  val seconds: Stream[Task, FiniteDuration] = time.awakeEvery[Task](1.second)
+
+  def service: HttpService =
     HttpService {
       case GET -> Root / "wsTest" =>
         Ok("WebServices endpoint active")
 
       case GET -> Root / "ws" =>
-        val src = awakeEvery(1.seconds)(Strategy.DefaultStrategy, DefaultScheduler).map { d =>
-          Text(s"Ping! $d")
+        val fromClient: Sink[Task, WebSocketFrame] = _.evalMap { (ws: WebSocketFrame) =>
+          ws match {
+            case Text(t, _) => Task.delay(println(t))
+            case f          => Task.delay(println(s"Unknown type: $f"))
+          }
         }
-        val sink: Sink[Task, WebSocketFrame] = Process.constant {
-          case Text(t, _) => Task.delay(println(t))
-          case f          => Task.delay(println(s"Unknown type: $f"))
+        val toClient: Stream[Task, WebSocketFrame] = seconds.map { d =>
+          Text(s"Ping! ${d.toMillis}")
         }
-        WS(Exchange(src, sink))
+        WS(toClient, fromClient)
 
       case GET -> Root / "wsecho" =>
-        val q = unboundedQueue[WebSocketFrame]
-        val src = q.dequeue.collect {
+        val queue = async.unboundedQueue[Task, WebSocketFrame]
+        val echoReply: Pipe[Task, WebSocketFrame, WebSocketFrame] = pipe.collect {
           case Text(msg, _) => Text("You sent the server: " + msg)
+          case _            => Text("Something new")
         }
 
-        WS(Exchange(src, q.enqueue))
+        queue.flatMap { q =>
+          val d = q.dequeue.through(echoReply)
+          val e = q.enqueue
+          WS(d, e)
+        }
     }
+
 }

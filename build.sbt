@@ -27,7 +27,11 @@ lazy val greenscreen =
         library.dwMetrics("-core"),
         library.dwMetrics("-json"),
         library.flywayDb,
-        library.freeStyle,
+        library.freeStyle(""),
+        library.freeStyle("-doobie"),
+        library.freeStyle("-effects"),
+        library.freeStyle("-http-http4s"),
+        library.freeStyle("-logging"),
         library.http4s("-blaze-server"),
         library.http4s("-circe"),
         library.http4s("-dsl"),
@@ -39,6 +43,7 @@ lazy val greenscreen =
         library.pureConfig,
         library.refined(""),
         library.refined("-pureconfig"),
+        library.shapeless,
         library.doobie("-scalatest-cats") % Test,
         library.scalaCheck                % Test,
         library.scalaTest                 % Test
@@ -60,7 +65,7 @@ lazy val library =
       val dwMetrics  = "3.2.2"
       val flywayDb   = "4.2.0"
       val freeStyle  = "0.2.0"
-      val http4s     = "0.15.13"
+      val http4s     = "0.17.0-M3"
       val librato    = "5.0.5"
       val logback    = "1.2.3"
       val nscala     = "2.16.0"
@@ -68,6 +73,7 @@ lazy val library =
       val refined    = "0.8.1"
       val scalaCheck = "1.13.5"
       val scalaTest  = "3.0.3"
+      val shapeless  = "2.3.2"
     }
     // Enables Http/2 in Java 8 - http://eclipse.org/jetty/documentation/current/alpn-chapter.html
     val alpn: ModuleID = "org.mortbay.jetty.alpn" % "alpn-boot" % Version.alpn
@@ -84,7 +90,7 @@ lazy val library =
     // Database migrations tool - https://flywaydb.org/getstarted/why
     val flywayDb: ModuleID = "org.flywaydb" % "flyway-core" % Version.flywayDb
     // Framework to build FP applications - https://github.com/frees-io/freestyle
-    val freeStyle: ModuleID = "io.frees" %% "freestyle" % Version.freeStyle
+    def freeStyle(stuff: String): ModuleID = "io.frees" %% s"freestyle$stuff" % Version.freeStyle
     // web server library - http://http4s.org/
     def http4s(stuff: String): ModuleID = "org.http4s" %% s"http4s$stuff" % Version.http4s
     // metrics library - https://github.com/librato/metrics-librato
@@ -101,6 +107,8 @@ lazy val library =
     val scalaCheck: ModuleID = "org.scalacheck" %% "scalacheck" % Version.scalaCheck
     // testing library - http://www.scalatest.org/user_guide
     val scalaTest: ModuleID = "org.scalatest" %% "scalatest" % Version.scalaTest
+    // Generic programming library - https://github.com/milessabin/shapeless
+    val shapeless = "com.chuusai" %% "shapeless" % Version.shapeless
   }
 
 // *****************************************************************************

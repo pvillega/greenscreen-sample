@@ -27,23 +27,23 @@ import com.librato.metrics.reporter.Librato
 import org.http4s.server.blaze.BlazeBuilder
 import org.http4s.server.metrics._
 import org.http4s.server.syntax._
-import org.http4s.server.{ Router, Server, ServerApp }
-import org.http4s.{ HttpService, Request, Response, Service }
+import org.http4s.server.Router
+import org.http4s._
 import pureconfig._
 import eu.timepit.refined.auto._
 import eu.timepit.refined.pureconfig._
+import fs2.{ Stream, Task }
+import org.http4s.util.StreamApp
 import pureconfig.error.ConfigReaderException
 
-import scalaz.concurrent.Task
+object Main extends StreamApp with Loggable {
 
-object Main extends ServerApp with Loggable {
-
-  override def server(args: List[String]): Task[Server] =
+  override def stream(args: List[String]): Stream[Task, Nothing] =
     preStartOperations().fold(
       err => {
         error(err.getMessage, err)
         error("Errors during pre-Start phase. Program will now exit.")
-        Task.fail(err)
+        Stream.eval(Task.fail(err))
       },
       config => {
         val rootService = configureAppServices(config)
@@ -54,12 +54,12 @@ object Main extends ServerApp with Loggable {
           .withWebSockets(true)
           .withServiceExecutor(config.defaultPool)
           .mountService(rootService, config.appPrefix)
-          .start
+          .serve
       }
     )
 
   private def configureAppServices(config: Config): HttpService = {
-    val appServices: Service[Request, Response] =
+    val appServices: HttpService =
     HelloWorldService.service(config) orElse StatusService.service(config) orElse WebSocketService.service
 
     // we want to disable metrics url in production so attackers can't access the data. We will get them via backend services like Librato

@@ -27,7 +27,7 @@ import org.joda.time.DateTime
 
 object StatusService extends Loggable {
 
-  def service(config: Config): Service[Request, Response] =
+  def service(config: Config): HttpService =
     HttpService {
       case GET -> Root / "status" =>
         val status = Json.obj(
