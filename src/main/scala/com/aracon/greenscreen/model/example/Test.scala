@@ -14,20 +14,8 @@
  * limitations under the License.
  */
 
-package com.aracon.greenscreen.db
+package com.aracon.greenscreen.model.example
 
-import com.aracon.greenscreen._
-import com.aracon.greenscreen.db.logger.LogbackDoobieLogger
-import com.aracon.greenscreen.model.Test
-import doobie.imports._
-import doobie.util.log.LogHandler
+import com.aracon.greenscreen.{ NonEmptyString, PositiveInt }
 
-object DBQueries {
-  implicit val doobieLog: LogHandler = LogbackDoobieLogger.logbackLogHandler
-
-  def getAllTests[M[_]](xa: Transactor[M]) =
-    sql"SELECT ID, NAME FROM Test"
-      .query[Test]
-      .list
-      .transact(xa)
-}
+final case class Test(id: PositiveInt, name: NonEmptyString)

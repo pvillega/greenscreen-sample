@@ -78,6 +78,11 @@ We also use [Refined](https://github.com/fthomas/refined) to enforce constraints
 we load but we will expand to other
 areas of the application.
 
+### FreeStyle
+
+[FreeStyle](http://frees.io/) is a 47 Degrees library/framework to build applications following FP principles. It facilitates
+building an application based on Free Monads and provides integrations with libraries like Cats and Http4s.
+
 ## Database
 
 ### Postgres

@@ -21,7 +21,8 @@ import java.util.concurrent.TimeUnit
 import cats.implicits._
 import com.aracon.greenscreen.config.{ Config, Settings }
 import com.aracon.greenscreen.db.migration.FlywayMigration
-import com.aracon.greenscreen.service.{ HelloWorldService, StatusService, WebSocketService }
+import com.aracon.greenscreen.service.example.{ HelloWorldService, WebSocketService }
+import com.aracon.greenscreen.service.StatusService
 import com.librato.metrics.reporter.Librato
 import org.http4s.server.blaze.BlazeBuilder
 import org.http4s.server.metrics._
@@ -62,10 +63,8 @@ object Main extends ServerApp with Loggable {
     HelloWorldService.service(config) orElse StatusService.service(config) orElse WebSocketService.service
 
     // we want to disable metrics url in production so attackers can't access the data. We will get them via backend services like Librato
-    val metricsRoute: List[(String, HttpService)] =
-      if (config.isDev) ("/metrics" -> metricsService(config.metricRegistry)) :: Nil else Nil
-    val routes
-      : List[(String, HttpService)] = ("" -> Metrics(config.metricRegistry, "services")(appServices)) :: metricsRoute
+    val metricsRoute = if (config.isDev) ("/metrics" -> metricsService(config.metricRegistry)) :: Nil else Nil
+    val routes       = ("" -> Metrics(config.metricRegistry, "services")(appServices)) :: metricsRoute
 
     Router(routes: _*)
   }

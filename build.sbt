@@ -27,6 +27,7 @@ lazy val greenscreen =
         library.dwMetrics("-core"),
         library.dwMetrics("-json"),
         library.flywayDb,
+        library.freeStyle,
         library.http4s("-blaze-server"),
         library.http4s("-circe"),
         library.http4s("-dsl"),
@@ -58,6 +59,7 @@ lazy val library =
       val doobie     = "0.4.1"
       val dwMetrics  = "3.2.2"
       val flywayDb   = "4.2.0"
+      val freeStyle  = "0.2.0"
       val http4s     = "0.15.13"
       val librato    = "5.0.5"
       val logback    = "1.2.3"
@@ -81,6 +83,8 @@ lazy val library =
     def dwMetrics(stuff: String): ModuleID = "io.dropwizard.metrics" % s"metrics$stuff" % Version.dwMetrics
     // Database migrations tool - https://flywaydb.org/getstarted/why
     val flywayDb: ModuleID = "org.flywaydb" % "flyway-core" % Version.flywayDb
+    // Framework to build FP applications - https://github.com/frees-io/freestyle
+    val freeStyle: ModuleID = "io.frees" %% "freestyle" % Version.freeStyle
     // web server library - http://http4s.org/
     def http4s(stuff: String): ModuleID = "org.http4s" %% s"http4s$stuff" % Version.http4s
     // metrics library - https://github.com/librato/metrics-librato

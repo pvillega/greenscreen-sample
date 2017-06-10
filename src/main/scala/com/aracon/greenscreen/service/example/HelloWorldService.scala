@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.aracon.greenscreen.service
+package com.aracon.greenscreen.service.example
 
 import java.util.concurrent.TimeUnit
 
 import com.aracon.greenscreen.Loggable
 import com.aracon.greenscreen.config.Config
-import com.aracon.greenscreen.db.DBQueries
-import io.circe.syntax._
+import com.aracon.greenscreen.db.example.DBQueries
 import io.circe.generic.auto._
+import io.circe.syntax._
 import io.circe.refined._
 import eu.timepit.refined.auto._
 import org.http4s._

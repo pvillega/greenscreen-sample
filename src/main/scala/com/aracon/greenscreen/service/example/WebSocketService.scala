@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.aracon.greenscreen.service
+package com.aracon.greenscreen.service.example
 
 import org.http4s._
 import org.http4s.dsl._
