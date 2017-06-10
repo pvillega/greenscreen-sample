@@ -23,7 +23,7 @@ import doobie.util.invariant.InvalidObjectMapping
 import eu.timepit.refined.W
 import eu.timepit.refined.api.{ RefType, Refined, Validate }
 import eu.timepit.refined.collection.NonEmpty
-import eu.timepit.refined.numeric.{ Greater, Positive }
+import eu.timepit.refined.numeric.{ Interval, Positive }
 import pureconfig._
 import pureconfig.ConvertHelpers._
 
@@ -39,7 +39,7 @@ package object greenscreen {
 
   type PositiveInt    = Int Refined Positive
   type NonEmptyString = String Refined NonEmpty
-  type ServerPort     = Int Refined Greater[W.`1024`.T]
+  type ServerPort     = Int Refined Interval.Closed[W.`1025`.T, W.`65535`.T]
 
   // PureConfig 0.6.0+: Force PureConfig to expect .conf keys as CamelCase instead of kebab-case-key
   implicit def productHint[T]: ProductHint[T] = ProductHint[T](ConfigFieldMapping(CamelCase, CamelCase))
