@@ -16,6 +16,10 @@
 
 package com.aracon.greenscreen.model.questions
 
+import cats.implicits._
+import cats.data.ValidatedNel
 import com.aracon.greenscreen.model.{ Key, Question }
 
-final case class BooleanQuestion(k: Key, question: String) extends Question[Boolean]
+final case class BooleanQuestion(k: Key, question: String, systemQuestion: Boolean = false) extends Question[Boolean] {
+  override def validate(t: Boolean): ValidatedNel[String, Unit] = ().validNel[String]
+}

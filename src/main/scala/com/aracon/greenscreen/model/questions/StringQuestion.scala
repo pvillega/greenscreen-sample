@@ -16,6 +16,11 @@
 
 package com.aracon.greenscreen.model.questions
 
+import cats.data.{ NonEmptyList, ValidatedNel }
+import cats.implicits._
 import com.aracon.greenscreen.model.{ Key, Question }
 
-final case class StringQuestion(k: Key, question: String) extends Question[String]
+final case class StringQuestion(k: Key, question: String, systemQuestion: Boolean = false) extends Question[String] {
+  override def validate(t: String): ValidatedNel[String, Unit] =
+    ().validNel[String].ensuring(!t.isEmpty, NonEmptyList.of(s"$k: Can't be an empty string"))
+}

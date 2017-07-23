@@ -16,14 +16,4 @@
 
 package com.aracon.greenscreen.model
 
-import java.io.Serializable
-
-import cats.data.ValidatedNel
-
-// unsealed trait for question
-trait Question[T] extends Product with Serializable {
-  def k: Key
-  def question: String
-  def systemQuestion: Boolean
-  def validate(t: T): ValidatedNel[String, Unit]
-}
+final case class UserAnswers(userId: Long, answersMap: AnswerMap)

@@ -17,17 +17,21 @@
 package com.aracon.greenscreen.model
 
 import com.aracon.greenscreen.model.questions._
-import shapeless.HNil
+import shapeless.{ HList, HNil }
+
+final case class Questionnaire[T <: HList](questions: T)
 
 object Questionnaire {
 
-  val firstName = StringQuestion("firstName", "First Name")
-  val lastName  = StringQuestion("lastName", "Last Name")
-  val age       = NumberQuestion("age", "Your age")
-  val address   = AddressQuestion("address", "Address")
-  val deposit   = MoneyQuestion("deposit", "Amount to deposit")
-  val tAndC     = BooleanQuestion("tAndC", "I agree with T & C")
+  val creationDate = DateQuestion("creationDate", "Creation Date", systemQuestion = true)
+  val firstName    = StringQuestion("firstName", "First Name")
+  val lastName     = StringQuestion("lastName", "Last Name")
+  val age          = NumberQuestion("age", "Your age")
+  val address      = AddressQuestion("address", "Address")
+  val deposit      = MoneyQuestion("deposit", "Amount to deposit")
+  val tAndC        = BooleanQuestion("tAndC", "I agree with T & C")
 
-  val questions = firstName :: lastName :: age :: address :: deposit :: tAndC :: HNil
+  private val questions = creationDate :: firstName :: lastName :: age :: address :: deposit :: tAndC :: HNil
 
+  def apply() = new Questionnaire(questions)
 }

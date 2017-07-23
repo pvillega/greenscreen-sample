@@ -2,7 +2,13 @@
 // Projects
 // *****************************************************************************
 
-val wartRemoverExclusions = List(Wart.NonUnitStatements)
+// Some exclusions required by FreeStyle
+val wartRemoverExclusions = List(Wart.Any, Wart.FinalCaseClass, Wart.DefaultArguments, Wart.ExplicitImplicitTypes, Wart.NonUnitStatements, Wart.StringPlusAny, Wart.Throw)
+
+// For FreesStyle
+resolvers += Resolver.sonatypeRepo("releases")
+addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M9" cross CrossVersion.full)
+addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.4" cross CrossVersion.binary)
 
 lazy val greenscreen =
   project
@@ -28,6 +34,7 @@ lazy val greenscreen =
         library.dwMetrics("-json"),
         library.flywayDb,
         library.freeStyle(""),
+        library.freeStyle("-cache"),
         library.freeStyle("-doobie"),
         library.freeStyle("-effects"),
         library.freeStyle("-http-http4s"),
@@ -60,17 +67,17 @@ lazy val library =
       val alpn       = "8.1.11.v20170118"
       val cats       = "0.9.0"
       val circe      = "0.8.0"
-      val cron4s     = "0.4.0"
+      val cron4s     = "0.4.1"
       val doobie     = "0.4.1"
-      val dwMetrics  = "3.2.2"
+      val dwMetrics  = "3.2.3"
       val flywayDb   = "4.2.0"
-      val freeStyle  = "0.2.0"
+      val freeStyle  = "0.3.1"
       val http4s     = "0.17.0-M3"
-      val librato    = "5.0.5"
+      val librato    = "5.1.0"
       val logback    = "1.2.3"
       val nscala     = "2.16.0"
-      val pureConfig = "0.7.0"
-      val refined    = "0.8.1"
+      val pureConfig = "0.7.2"
+      val refined    = "0.8.2"
       val scalaCheck = "1.13.5"
       val scalaTest  = "3.0.3"
       val shapeless  = "2.3.2"

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.aracon.greenscreen.model
+package com.aracon.greenscreen.model.poly
 
 import com.aracon.greenscreen.model.questions._
-import shapeless.{ HList, Poly1 }
 import shapeless.ops.hlist.Mapper
+import shapeless.{ HList, Poly1 }
 
 // render as NodeSeq using a polymorphic function
 trait HtmlRenderer extends Poly1 {
@@ -37,9 +37,10 @@ trait HtmlRenderer extends Poly1 {
 
   implicit def caseMoney =
     at[MoneyQuestion](
-      (x: MoneyQuestion) =>
-        <span>{x.question}:</span> ++ <input id={s"${x.k}-currency"}/> ++ <input id={s"${x.k}-amount"}/>
+      (x: MoneyQuestion) => <span>{x.question}:</span> ++ <input id={s"${x.k}-currency"}/> ++ <input id={s"${x.k}-amount"}/>
     )
+
+  implicit def caseDate = at[DateQuestion]((x: DateQuestion) => <span>{x.question}:</span> ++ <input type="date" id={s"${x.k}"}/>)
 }
 
 object HtmlRenderer extends HtmlRenderer {

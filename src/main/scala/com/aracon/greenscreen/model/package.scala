@@ -20,4 +20,6 @@ package com.aracon.greenscreen
 package object model {
   type Key       = String
   type AnswerMap = Map[Key, Answer[_]]
+
+  val emptyAnswerMap = Map.empty[Key, Answer[_]]
 }

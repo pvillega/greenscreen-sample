@@ -26,24 +26,16 @@ import eu.timepit.refined.pureconfig._
 
 class ConfigSpec extends SpecTrait {
 
-  "Hardcoded configuration" - {
-    val confFile = "application.conf"
-    "is valid and can be loaded by pure config" - {
-      // The following env vars are required as our config expects env vars to set the proper values, failing if they are not set.
-      // This ensures the run environments are properly setup
-      val requiredEnvVars = Map("LIBRATO_USER" -> "none", "LIBRATO_PASSWORD" -> "none", "LIBRATO_TOKEN" -> "none")
-      requiredEnvVars.foreach { case (k, v) => System.setProperty(k, v) }
+  "Hardcoded configuration is valid and can be loaded by pure config" - {
+    "Testing config for file application.conf" in {
+      // we load files explicitly, to avoid System.setValue magic
+      val resource = Thread.currentThread().getContextClassLoader.getResource("application.conf")
+      val path     = Paths.get(resource.toURI)
 
-      s"Testing config for file $confFile" in {
-        // we load files explicitly, to avoid System.setValue magic
-        val resource = Thread.currentThread().getContextClassLoader.getResource(confFile)
-        val path     = Paths.get(resource.toURI)
-
-        loadConfig[Settings](path).fold(
-          err => fail(s"Error loading configuration: $err."),
-          _ => ()
-        )
-      }
+      loadConfig[Settings](path).fold(
+        err => fail(s"Error loading configuration: $err."),
+        _ => ()
+      )
     }
   }
 

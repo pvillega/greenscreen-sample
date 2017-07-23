@@ -1,7 +1,7 @@
 // Added by sbt-fresh - source code formatting - see https://github.com/olafurpg/scalafmt
 addSbtPlugin("com.geirsson"      % "sbt-scalafmt" % "0.6.6")
 // Added by sbt-fresh - allows running git commands from within sbt - see https://github.com/sbt/sbt-git
-addSbtPlugin("com.typesafe.sbt"  % "sbt-git"      % "0.9.2")
+addSbtPlugin("com.typesafe.sbt"  % "sbt-git"      % "0.9.3")
 // Added by sbt-fresh - adds license header to source files - see https://github.com/sbt/sbt-header
 addSbtPlugin("de.heikoseeberger" % "sbt-header"   % "1.8.0")
 
@@ -17,7 +17,7 @@ addSbtPlugin("io.get-coursier" % "sbt-coursier" % "1.0.0-RC1")
 addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.8.2")
 
 // Twirl is the Play template engine, used for rendering html pages - See https://github.com/playframework/twirl
-addSbtPlugin("com.typesafe.sbt" % "sbt-twirl" % "1.3.0")
+addSbtPlugin("com.typesafe.sbt" % "sbt-twirl" % "1.3.3")
 
 // Flyway is a tool for database migrations - See https://flywaydb.org/getstarted/firststeps/sbt
 addSbtPlugin("org.flywaydb" % "flyway-sbt" % "4.1.2")
@@ -25,7 +25,7 @@ addSbtPlugin("org.flywaydb" % "flyway-sbt" % "4.1.2")
 resolvers += "Flyway" at "https://flywaydb.org/repo"
 
 // WartRemover is a scala linter - See http://www.wartremover.org/doc/install-setup.html
-addSbtPlugin("org.wartremover" % "sbt-wartremover" % "2.0.3")
+addSbtPlugin("org.wartremover" % "sbt-wartremover" % "2.1.1")
 
 // sbt-scoverage is a plugin for SBT that integrates the scoverage code coverage library - See https://github.com/scoverage/sbt-scoverage
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.0")

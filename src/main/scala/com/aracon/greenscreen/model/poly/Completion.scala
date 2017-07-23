@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.aracon.greenscreen.model
+package com.aracon.greenscreen.model.poly
 
+import com.aracon.greenscreen.model._
 import com.aracon.greenscreen.model.questions._
-import shapeless.{ HList, Poly1 }
 import shapeless.ops.hlist.Mapper
+import shapeless.{ HList, Poly1 }
 
 // compute completion
 sealed trait Completion {
@@ -47,6 +48,8 @@ class CompletionCalculator(answers: AnswerMap) {
     implicit def caseAddress = at[AddressQuestion]((x: AddressQuestion) => calculate(x, answers))
 
     implicit def caseMoney = at[MoneyQuestion]((x: MoneyQuestion) => calculate(x, answers))
+
+    implicit def caseDate = at[DateQuestion]((x: DateQuestion) => calculate(x, answers))
 
   }
   def apply[L <: HList](list: L)(implicit m: Mapper[Apply.type, L]): m.Out = list.map(Apply)

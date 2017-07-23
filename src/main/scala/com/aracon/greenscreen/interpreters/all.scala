@@ -14,14 +14,23 @@
  * limitations under the License.
  */
 
-package com.aracon.greenscreen.model.questions
+package com.aracon.greenscreen.interpreters
 
-import cats.data.{ NonEmptyList, ValidatedNel }
+import freestyle._
 import cats.implicits._
-import com.aracon.greenscreen.model.types.Money
-import com.aracon.greenscreen.model.{ Key, Question }
+import cats.data.State
 
-final case class MoneyQuestion(k: Key, question: String, systemQuestion: Boolean = false) extends Question[Money] {
-  override def validate(t: Money): ValidatedNel[String, Unit] =
-    ().validNel[String].ensuring(t.amount >= 0, NonEmptyList.of(s"$k: Amount can't be negative"))
+object all {
+
+//  type KVStoreState[A] = State[Map[String, Any], A]
+//
+//  implicit val doobieStorageHandler: Storage.Handler[KVStoreState] = new Storage.Handler[KVStoreState] {
+//    def put[A](key: String, value: A): KVStoreState[Unit] =
+//      State.modify(_.updated(key, value))
+//    def get[A](key: String): KVStoreState[Option[A]] =
+//      State.inspect(_.get(key).map(_.asInstanceOf[A]))
+//    def delete(key: String): KVStoreState[Unit] =
+//      State.modify(_ - key)
+//  }
+
 }

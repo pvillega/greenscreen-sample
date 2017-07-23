@@ -36,6 +36,7 @@ object StatusService extends Loggable {
           ("name", Json.fromString(BuildInfo.name)),
           ("version", Json.fromString(BuildInfo.version))
         )
+        // sensitive info will only be displayed in log files
         val sensitiveInfo = Json.obj(
           ("scalaVersion", Json.fromString(BuildInfo.scalaVersion)),
           ("sbtVersion", Json.fromString(BuildInfo.sbtVersion)),

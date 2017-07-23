@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package com.aracon.greenscreen.model
-
-import java.io.Serializable
+package com.aracon.greenscreen.model.questions
 
 import cats.data.ValidatedNel
+import cats.implicits._
+import com.aracon.greenscreen.model.{ Key, Question }
+import org.joda.time.DateTime
 
-// unsealed trait for question
-trait Question[T] extends Product with Serializable {
-  def k: Key
-  def question: String
-  def systemQuestion: Boolean
-  def validate(t: T): ValidatedNel[String, Unit]
+final case class DateQuestion(k: Key, question: String, systemQuestion: Boolean = false) extends Question[DateTime] {
+  override def validate(t: DateTime): ValidatedNel[String, Unit] = ().validNel[String]
 }

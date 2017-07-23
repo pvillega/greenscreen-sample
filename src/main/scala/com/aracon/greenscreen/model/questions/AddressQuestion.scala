@@ -16,7 +16,11 @@
 
 package com.aracon.greenscreen.model.questions
 
+import cats.data.ValidatedNel
+import cats.implicits._
 import com.aracon.greenscreen.model.types.Address
 import com.aracon.greenscreen.model.{ Key, Question }
 
-final case class AddressQuestion(k: Key, question: String) extends Question[Address]
+final case class AddressQuestion(k: Key, question: String, systemQuestion: Boolean = false) extends Question[Address] {
+  override def validate(t: Address): ValidatedNel[String, Unit] = ().validNel[String]
+}
